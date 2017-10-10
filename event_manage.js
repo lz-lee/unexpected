@@ -7,12 +7,12 @@ var Event = (function() {
     events[type].push(callback)
   }
 
-  function emit(type, args) {
+  function emit(type, ...args) {
     if (!events[type]) {
       return
     }
     for (var i = 0; i < events[type].length; i++) {
-      events[type][i].call(this, args)
+      events[type][i].call(this, ...args)
     }
   }
   return {
@@ -55,29 +55,36 @@ class Event {
     this.events[type].push(callback)
   }
 
-  emit(type, args) {
+  emit(type, ...args) {
     if (!this.events[type]) {
       return
     }
     for (let i = 0; i < this.events[type].length; i++) {
-      this.events[type][i].call(this, args)
+      this.events[type][i].call(this, ...args)
     }
   }
 
-  // off(type, callback) {
-  //   if (!this.events[type]) {
-  //     return
-  //   }
-  //   for (let i = 0; i < this.events[type].length; i++) {
-  //     if (this.events[type][i] === callback) {
-  //       this.events[type].splice(i, 1)
-  //       break
-  //     }
-  //   }
-  // }
+  off(type, callback) {
+    if (!this.events[type]) {
+      return
+    }
+    let index = this.events[type].indexOf(handle)
+    this.events[type].splice(index, 1)
+  }
 }
-const event = new Event()
-event.on('eat', () => console.log('init..'))
-event.emit('eat', 'bannar')
-// event.off('eat', () => console.log('init...'))
-// event.emit('eat', 'apple')
+const sayHi = (name) => console.log(`Hello ${name}`)
+const sayHi2 = (name) => console.log(`Good night, ${name}`)
+
+const myEvent = new event()
+// myEvent.on('hi', sayHi)
+// myEvent.on('hi', sayHi2)
+
+// myEvent.emit('hi', 'lee')
+
+// myEvent.off('hi', sayHi)
+// myEvent.emit('hi', 'niuniu')
+
+myEvent.on('hi', (name, age) => {
+  console.log(`I am ${name}, and I am ${age} years old`)
+})
+myEvent.emit('hi', 'lee', 25)
