@@ -48,11 +48,17 @@ Evetn.emit('search', 'doing something')
 class Event {
   constructor() {
     this.events = {}
+    this.index = -1 
   }
 
   on(type, callback) {
+    let token = (this.index++).toString()
     this.events[type] = this.events[type] || []
-    this.events[type].push(callback)
+    this.events[type].push({
+      token: token,
+      callback: callback
+    })
+    return token
   }
 
   emit(type, ...args) {
@@ -64,12 +70,17 @@ class Event {
     }
   }
 
-  off(type, callback) {
+  off(type, token) {
     if (!this.events[type]) {
       return
     }
-    let index = this.events[type].indexOf(handle)
-    this.events[type].splice(index, 1)
+    let len = this.events[type].length
+    for (let i = 0; i < len; i++) {
+      if (this.events[type][i].token === token) {
+        this.events[type].splice(i, 1)
+        break
+      }
+    }
   }
 }
 const sayHi = (name) => console.log(`Hello ${name}`)
@@ -88,3 +99,13 @@ myEvent.on('hi', (name, age) => {
   console.log(`I am ${name}, and I am ${age} years old`)
 })
 myEvent.emit('hi', 'lee', 25)
+
+
+// 接受匿名函数，增加一个标志位
+const token1 = myEvent.on('hi', (name) => console.log(`Hello ${name}`))
+const token2 = myEvent.on('hi', (name) => console.log(`Good night, ${name}`))
+
+// myEvent.emit('hi', 'lee')
+
+myEvent.off('hi', token1)
+myEvent.emit('hi', 'niuniu')
