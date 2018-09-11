@@ -172,6 +172,27 @@ export function exportExcel(url, data) {
   }))
 }
 
+export function getJSONP(url, callback) {
+  let cbnum = getJSONP.count++
+  let cbname = 'getJSONP.' + cbnum
+  url += (url.indexOf('?') > 0 ? '&' : '?') + 'jsonp=' + cbname
+  let script = document.createElement('script')
+
+  getJSONP[cbnum] = function(res) {
+    try {
+      callback(res)
+    }
+    finally {
+      delete getJSONP[cbnum]
+      script.parentNode.removeChild(script)
+    }
+  }
+
+  script.scr = url
+  document.body.appendChild(script)
+}
+
+getJSONP.count = 0
 
 function padLeftZero(str) {
 	return ('00' + str).substr(str.length)
