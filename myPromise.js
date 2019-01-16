@@ -38,6 +38,70 @@ function Promise(executor) {
     reject(e)
   }
 }
+/**
+ * promise主要解决程序，根据 x 的值来决定promise2的状态的函数
+ * @param {*} promise
+ * @param {*} x 为 promise2 = promise1.then(onResolved, onRejected) 里 resolve/reject 的返回值
+ * @param {*} resolve
+ * @param {*} reject
+ */
+
+function resolvePromise(promise, x, resolve, reject) {
+  var then
+  var isThenCalledOrThrow = false
+
+  if (promise === x) {  // 2.3.1
+    // then里不能返回 this
+    return reject(new TypeError('promise 循环引用'))
+  }
+
+  if (x instanceof Promise) { // 2.3.2
+    // 返回的 x 状态未确定
+    if (x.status === 'pending') {
+      x.then(function(val) {
+        resolvePromise(promise2, val, resolve, reject)
+      }, reject)
+    } else {
+      x.then(resolve, reject)
+    }
+  } else if (x !== null && (typeof x === 'object' || typeof x === 'function')) { // 2.3.3
+    // 返回的 x 是一个对象或函数
+    try {
+      then = x.then;  // 2.3.3.1
+
+      if (typeof then === 'function') { // 2.3.3.3
+
+        var resolveP = function(y) {
+          if (isThenCalledOrThrow) return // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+          isThenCalledOrThrow = true
+
+          return resolvePromise(promise2, y, resolve, reject) // 2.3.3.3.1
+        }
+
+        var rejectP = function(r) {
+          if (isThenCalledOrThrow) return // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+          isThenCalledOrThrow = true
+
+          return reject(r)  // 2.3.3.3.2
+        }
+
+        // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+        then.call(x, resolveP, rejectP)
+      } else {
+        // then 非函数，即x 不是一个thenable对象，直接resolve x值
+        resolve(x)  // 2.3.3.4
+      }
+    } catch (e) {   // 2.3.3.2
+      if (isThenCalledOrThrow) return // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+      isThenCalledOrThrow = true
+
+      return reject(e)
+    }
+  } else {  // 2.3.4
+    // then 不是对象/函数，直接resolve x作为结果
+    resolve(x)
+  }
+}
 
 Promise.prototype.then = function(onResolved, onRejected) {
   var self = this
@@ -54,11 +118,12 @@ Promise.prototype.then = function(onResolved, onRejected) {
         try {
           var x = onResolved(self.data)
           // 如果返回一个Promise对象，则取它的结果作为promose2的结果
-          if (x instanceof Promise) {
-            x.then(resolve, reject)
-          }
-          // 否则以它的返回值作为promise2的结果
-          resolve(x)
+          // if (x instanceof Promise) {
+          //   x.then(resolve, reject)
+          // }
+          // // 否则以它的返回值作为promise2的结果
+          // resolve(x)
+          resolvePromise(promise2, x, resolve, reject)
         } catch (e) {
           // 如果出错
           reject(e)
@@ -72,9 +137,10 @@ Promise.prototype.then = function(onResolved, onRejected) {
       setTimeout(function() {
         try {
           var x = onRejected(self.data)
-          if (x instanceof Promise) {
-            x.then(resolve, reject)
-          }
+          // if (x instanceof Promise) {
+          //   x.then(resolve, reject)
+          // }
+          resolvePromise(promise2, x, resolve, reject)
         } catch (e) {
           reject(e)
         }
@@ -87,10 +153,11 @@ Promise.prototype.then = function(onResolved, onRejected) {
       self.onResolvedCallback.push(function(value) {
         try {
           var x = onResolved(self.data)
-          if (x instanceof Promise) {
-            x.then(resolve, reject)
-          }
-          resolve(x)
+          // if (x instanceof Promise) {
+          //   x.then(resolve, reject)
+          // }
+          // resolve(x)
+          resolvePromise(promise2, x, resolve, reject)
         } catch (e) {
           reject(e)
         }
@@ -99,9 +166,10 @@ Promise.prototype.then = function(onResolved, onRejected) {
       self.onRejectedCallback.push(function(reason) {
         try {
           var x = onRejected(self.data)
-          if (x instanceof Promise) {
-            x.then(resolve, reject)
-          }
+          // if (x instanceof Promise) {
+          //   x.then(resolve, reject)
+          // }
+          resolvePromise(promise2, x, resolve, reject)
         } catch (e) {
           reject(e)
         }
@@ -114,6 +182,17 @@ Promise.prototype.catch = function(onRejected) {
   return this.then(null, onRejected)
 }
 
+Promise.resolve = function(val) {
+  return new Promise((resolve, reject) => {
+    resolve(val)
+  })
+}
+
+Promise.reject = function(reason) {
+  return new Promise((resolve, reject) => {
+    reject(reason)
+  })
+}
 // 如何停止一个Promise
 // https://github.com/xieranmaya/blog/issues/5
 
