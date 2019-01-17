@@ -182,6 +182,41 @@ Promise.prototype.catch = function(onRejected) {
   return this.then(null, onRejected)
 }
 
+Promise.all = function(promises) {
+  return new Promise((resolve, reject) => {
+    var count = 0
+    var len = promises.length
+    var result = []
+
+    for (var i = 0; i < len; i++) {
+      (function(i){
+        Promise.resolve(promises(i)).then(val => {
+          count++
+          result[i] = val
+
+          if (count === len) {
+            return resolve(result)
+          }
+        }, reason => {
+          return reject(reason)
+        })
+      })(i)
+    }
+  })
+}
+
+Promise.race = function(promises) {
+  return new Promise((resolve, reject) => {
+    for (var i = 0; i < promises.length; i++) {
+      Promise.resolve(promises[i]).then(val => {
+        resolve(val)
+      }, reason => {
+        reject(reason)
+      })
+    }
+  })
+}
+
 Promise.resolve = function(val) {
   return new Promise((resolve, reject) => {
     resolve(val)
