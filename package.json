@@ -1,0 +1,23 @@
+{
+  "name": "unexpected",
+  "version": "1.0.0",
+  "description": "",
+  "main": "decorator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lz-lee/unexpected.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lz-lee/unexpected/issues"
+  },
+  "homepage": "https://github.com/lz-lee/unexpected#readme",
+  "devDependencies": {
+    "eslint": "^5.12.0"
+  }
+}

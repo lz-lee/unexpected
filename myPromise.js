@@ -218,6 +218,9 @@ Promise.race = function(promises) {
 }
 
 Promise.resolve = function(val) {
+  if (val instanceof Promise) {
+    return val
+  }
   return new Promise((resolve, reject) => {
     resolve(val)
   })
@@ -231,36 +234,61 @@ Promise.reject = function(reason) {
 // 如何停止一个Promise
 // https://github.com/xieranmaya/blog/issues/5
 
-(function() {
-  var STOP_VALUE = {}
-  // 停止的Promise
-  var STOP_PROMISE = Promise.resolve(STOP_VALUE)
+// (function() {
+//   var STOP_VALUE = {}
+//   // 停止的Promise
+//   var STOP_PROMISE = Promise.resolve(STOP_VALUE)
 
-  Promise.prototype._then = Promise.prototype.then
+//   Promise.prototype._then = Promise.prototype.then
 
-  // 现实一个stop方法，返回一个resolve状态的Promise
-  Promise.stop = function() {
-    return STOP_PROMISE
-  }
+//   // 现实一个stop方法，返回一个resolve状态的Promise
+//   Promise.stop = function() {
+//     return STOP_PROMISE
+//   }
 
-  // 重写then并在回调函数里面判断value是否与stop方法返回的值相等
-  Promise.prototype.then = function(onResolved, onRejected) {
-    return this._then(function(value) {
-      console.log('value === ' + value)
-      // 如果相等，则返回停止的Promise，（而这个停止的Promise是resolve状态，所以后面的Promise链都不会执行）; 否则执行回调
-      return value === STOP_VALUE ? STOP_VALUE : onResolved(value)
-    }, onRejected)
-  }
-})()
+//   // 重写then并在回调函数里面判断value是否与stop方法返回的值相等
+//   Promise.prototype.then = function(onResolved, onRejected) {
+//     return this._then(function(value) {
+//       console.log('value === ' + value)
+//       // 如果相等，则返回停止的Promise，（而这个停止的Promise是resolve状态，所以后面的Promise链都不会执行）; 否则执行回调
+//       return value === STOP_VALUE ? STOP_VALUE : onResolved(value)
+//     }, onRejected)
+//   }
+// })()
 
-Promise.resolve(8).then(v => {
-  console.log(v)
-  return 9
-}).then(v => {
-  console.log(v)
-  return Promise.stop()
-}).catch(() => {
-  console.log('catch')
-}).then(() => {
-  console.log('then')
-})
+// Promise.resolve(8).then(v => {
+//   console.log(v)
+//   return 9
+// }).then(v => {
+//   console.log(v)
+//   return Promise.stop()
+// }).catch(() => {
+//   console.log('catch')
+// }).then(() => {
+//   console.log('then')
+// })
+
+var p3 = new Promise( function(resolve,reject){
+  resolve( "B" );
+} );
+// var p1 = new Promise( function(resolve,reject){
+//          resolve( p3 );
+// } );
+
+var p1 = Promise.resolve(p3)
+var p2 = new Promise( function(resolve,reject){
+  resolve( "A" );
+} );
+
+console.log(p3, '1')
+console.log(p1, 'p1')
+p1.then( function(v){
+  console.log( v );
+} );
+
+console.log(p3, '2')
+console.log(p1, 'p11')
+p2.then((v) => console.log(v))
+
+console.log(p3, '3')
+console.log(p1, 'p111')
