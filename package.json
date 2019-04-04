@@ -4,7 +4,7 @@
   "description": "",
   "main": "decorator.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,11 @@
   },
   "homepage": "https://github.com/lz-lee/unexpected#readme",
   "devDependencies": {
-    "eslint": "^5.12.0"
+    "babel-jest": "^24.7.1",
+    "eslint": "^5.12.0",
+    "jest": "^24.7.1"
+  },
+  "dependencies": {
+    "immutable": "^4.0.0-rc.12"
   }
 }
