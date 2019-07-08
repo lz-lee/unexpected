@@ -4,7 +4,7 @@
  */
 export const milliFormat = num => {
   return num && num.toString().replace(/-?\d+/, (m) => {
-    return m.replace(/(\d+)(?=(\d{3})+$)/g, '$1,')
+    return m.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
   })
 }
 
