@@ -1,4 +1,10 @@
 function Promise(executor) {
+  if (typeof executor !== 'function') {
+    throw new TypeError('executor must be a function');
+  }
+  if (new.target === undefined ) {
+    throw new TypeError('Promise must use by new');
+  }
   var self = this
   self.status = 'pending'   // Promise 的状态
   self.data = undefined     // Promise 的值
@@ -39,9 +45,11 @@ function Promise(executor) {
   }
 }
 /**
- * promise主要解决程序，根据 x 的值来决定promise2的状态的函数
+ * promise A+ 规范
+ * https://promisesaplus.com/
+ * promise主要解决程序，根据 x 的值来决定 promise2 的状态的函数
  * @param {*} promise
- * @param {*} x 为 promise2 = promise1.then(onResolved, onRejected) 里 resolve/reject 的返回值
+ * @param {*} x 为 promise2 = promise1.then(onResolved, onRejected) 里 onResolved/onRejected 的返回值
  * @param {*} resolve
  * @param {*} reject
  */
@@ -72,27 +80,27 @@ function resolvePromise(promise, x, resolve, reject) {
       if (typeof then === 'function') { // 2.3.3.3
 
         var resolveP = function(y) {
-          if (isThenCalledOrThrow) return // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+          if (isThenCalledOrThrow) return // 2.3.3.3.3 即这三处谁先执行就以谁的结果为准
           isThenCalledOrThrow = true
 
           return resolvePromise(promise2, y, resolve, reject) // 2.3.3.3.1
         }
 
         var rejectP = function(r) {
-          if (isThenCalledOrThrow) return // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+          if (isThenCalledOrThrow) return // 2.3.3.3.3 即这三处谁先执行就以谁的结果为准
           isThenCalledOrThrow = true
 
           return reject(r)  // 2.3.3.3.2
         }
 
-        // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+        // 2.3.3.3 即这三处谁先执行就以谁的结果为准
         then.call(x, resolveP, rejectP)
       } else {
-        // then 非函数，即x 不是一个thenable对象，直接resolve x值
+        // then 非函数，即 x 不是一个thenable对象，直接 resolve x值
         resolve(x)  // 2.3.3.4
       }
     } catch (e) {   // 2.3.3.2
-      if (isThenCalledOrThrow) return // 2.3.3.3 即这三处谁选执行就以谁的结果为准
+      if (isThenCalledOrThrow) return // 2.3.3.3.4 即这三处谁先执行就以谁的结果为准, 如果 call then 跑出错误，如果resolveP / rejectP 已经执行，则忽略，即 isThenCalledOrThrow 已经为 true
       isThenCalledOrThrow = true
 
       return reject(e)
@@ -231,7 +239,7 @@ Promise.reject = function(reason) {
     reject(reason)
   })
 }
-// 如何停止一个Promise
+// 如何停止一个Promise, 即不执行promise链后续的promise的 resolve / reject 方法
 // https://github.com/xieranmaya/blog/issues/5
 
 // (function() {
@@ -250,25 +258,29 @@ Promise.reject = function(reason) {
 //   Promise.prototype.then = function(onResolved, onRejected) {
 //     return this._then(function(value) {
 //       console.log('value === ' + value)
-//       // 如果相等，则返回停止的Promise，（而这个停止的Promise是resolve状态，所以后面的Promise链都不会执行）; 否则执行回调
+//       // 如果相等，则返回 STOP_VALUE，不调用 onResolved.即相当于 new Promise((resovle, reject) => { return 2; 这里什么都不干 }) 那么这个promise 就是 pending 状态;
+//       //   否则执行回调
 //       return value === STOP_VALUE ? STOP_VALUE : onResolved(value)
 //     }, onRejected)
 //   }
 // })()
 
-// Promise.resolve(8).then(v => {
+
+// var op = Promise.resolve(8).then(v => {
 //   console.log(v)
 //   return 9
 // }).then(v => {
 //   console.log(v)
 //   return Promise.stop()
-// }).catch(() => {
+// });
+// console.log(op) // ====> 这里 op 的状态 是 pending，Promise<pending> 后续则不会执行
+// op.catch(() => {
 //   console.log('catch')
 // }).then(() => {
 //   console.log('then')
 // })
 
-var p3 = new Promise( function(resolve,reject){
+var p3 = new Promise(function(resolve,reject){
   resolve( "B" );
 } );
 // var p1 = new Promise( function(resolve,reject){
