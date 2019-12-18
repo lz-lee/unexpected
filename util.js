@@ -78,6 +78,26 @@ export function debounce(fn, delay) {
 }
 
 /**
+ * 截流函数
+ */
+
+export function throttle(func, delay) {
+  let last, timer
+  return function(...args) {
+      const now = Date.now()
+      if (last && now - last < delay) {
+          clearTimeout(timer)
+          timer = setTimeout(() => {
+              last = now
+              func.apply(this, args)
+          }, delay)
+      } else {
+          last = now
+          func.apply(this, args)
+      }
+  }
+}
+/**
 * 解析url 参数
 * @example ?id=12345&a=b
 * @return Object {id:12345,a:b}
