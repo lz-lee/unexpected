@@ -1,0 +1,106 @@
+<html>
+    <body>
+        <div class="parent">
+            <div class="child-1">
+                <div class="child-1-1">
+                    <div class="child-1-1-1">
+                        a
+                    </div>
+                </div>
+                <div class="child-1-2">
+                    <div class="child-1-2-1">
+                        b
+                    </div>
+                </div>
+                <div class="child-1-3">
+                    c
+                </div>
+            </div>
+            <div class="child-2">
+                <div class="child-2-1">
+                    <div class="child-2-1-1">
+                        d
+                    </div>
+                </div>
+                <div class="child-2-2">
+                    <div class="child-2-2-1">
+                        e
+                    </div>
+                </div>
+            </div>
+            <div class="child-3">
+                <div class="child-3-1">
+                    f
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+// 深度优先
+// 1、递归
+const deepTraversal1 = node => {
+    let nodeList = [];
+    if (node !== null) {
+        nodeList.push(node);
+        let children = node.children;
+        for (let i = 0; i < children.length; i++) {
+            nodeList.push.apply(nodeList, deepTraversal1(children[i]));
+        }
+    }
+    return nodeList;
+}
+// 2、循环
+// 栈实现，循环中做的是push => pop => push => pop
+const deepTraversal2 = (node) => {
+    let stack = [];
+    let nodes = [];
+    if (node) {
+        // 推入当前处理的node
+        stack.push(node);
+        // 栈， 先进后出
+        while (stack.length) {
+            let item = stack.pop();
+            let children = item.children;
+            let len = children.length;
+            nodes.push(item);
+            // 如果有 children，则将 children 入栈，
+            // 倒序 push，将最后的 children 放在栈底，每次 pop 最前的的 children，
+            for (let i = len - 1; i >= 0; i--) {
+                stack.push(children[i]);
+            }
+        }
+    }
+    return nodes;
+}
+
+const node = document.getElementsByClassName('parent')[0];
+
+// 广度优先
+// 队列实现， 循环中做的是push => shift => push => shift
+const widthTraversal = node => {
+    let queue = [];
+    let nodes = [];
+    if (node) {
+        // 推入当前处理的node
+        queue.push(node);
+        // 队列， 先进先出
+        while (queue.length) {
+            // 先 push 的 先出
+            let item = queue.shift();
+            let children = item.children;
+            let len = children.length;
+            nodes.push(item);
+            // 如果有 children，则将 children 加入队列，
+            // 正序加入，则会是一层一层的遍历
+            for (let i = 0; i < len; i++) {
+                queue.push(children[i]);
+            }
+        }
+    }
+    return nodes;
+}
+console.log('deepTraversal1>>', deepTraversal1(node));
+console.log('deepTraversal2>>', deepTraversal2(node));
+console.log('widthTraversal>>>', widthTraversal(node));
+</script>
