@@ -48,7 +48,7 @@ function loadDataOrder2(arr) {
     promises.reducer((chain, p, index) => chain.then(() => p).then(data => console.log(data).catch(err => console.log(err))), Promise.resolve());
 }
 
-// 方法一 二 都木有单独处理错误的和数据
+// 方法一 二 都没有单独处理错误的和数据
 
 /**
  * 方法三：generate 函数。next方法可以带一个参数，该参数就会被当作上一次 yield 表达式的返回值
@@ -80,7 +80,7 @@ async function loadDataOrder3(arr) {
 function* loadOne(url, time) {
     const p = yield fetchAPI(url, time);
     p.then(data => {
-        console.log(data)
+        console.log('load one ===> ', data)
     }).catch(err => console.log(err));
 }
 
