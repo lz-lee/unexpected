@@ -18,4 +18,4 @@ export default mergeDeepOverWriteLists = (a, b) => {
   return b;
 }
 
-// 此方法用于修复 mergeDeep 方法会直接concat List类型<数组>，而不是 merge
+// 此方法用于修复 mergeDeep 方法会直接 concat List类型<数组>，而不是 merge

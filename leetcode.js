@@ -30,7 +30,7 @@ function isValid(str) {
 }
 
 /**
- * 26.删除排序数组中的重复项
+ * 26.删除排序数组中的重复项，且返回新数组的长度
  * 双指针
  * @param [0,0,1,1,1,2,2,3,3,4]
  * @return 5
@@ -47,6 +47,29 @@ function removeDuplicates(arr) {
 
     }
     return slow + 1;
+}
+
+/**
+ * 53.最大子序和
+ * 动态规划：其思想是重新对变量赋值，重复利用变量，一般会要声明多个变量
+ * 在这里，sum 如果小于 0 则舍弃，将下一个 i 赋值给 sum；
+ * sum 如果大于 0 则继续累加
+ * @param {nums: number[]}
+ * @return number
+ */
+
+function maxSubArr(arr) {
+    let max = arr[0];
+    let sum = 0;
+    for (const i of arr) {
+        if (sum > 0) {
+            sum += i;
+        } else {
+            sum = i
+        }
+        max = Math.max(max, sum);
+    }
+    return max;
 }
 
 /**

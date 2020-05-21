@@ -28,7 +28,7 @@ Event.emit('serach', 'doing something')
 
 // es6
 class Event {
-  // static 表示该方法不会被实例继承，而是直接通过类来调用，静态方法中的this 指的是类，而不是实例
+  // static 表示该方法不会被实例继承，而是直接通过类来调用，静态方法中的 this 指的是类，而不是实例
   static on(type, callback) {
     return document.addEventListener(type, callback)
   }
@@ -48,7 +48,7 @@ Evetn.emit('search', 'doing something')
 class Event {
   constructor() {
     this.events = {}
-    this.index = -1 
+    this.index = -1
   }
 
   on(type, callback) {
