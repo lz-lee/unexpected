@@ -26,14 +26,15 @@ function flatten2(arr, deep) {
 flatten2(arr, 2);
 
 // 栈
-function flatten3(arr) {
+function flatten3(arr, deep = Infinity) {
     const stack = [];
     const newArr = [...arr];
 
     while(newArr.length) {
         const item = newArr.shift();
-        if (Array.isArray(item)) {
+        if (Array.isArray(item) && deep) {
             newArr.unshift(...item);
+            deep--;
         } else {
             stack.push(item);
         }

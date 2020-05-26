@@ -215,7 +215,7 @@ export function getJSONP(url, callback) {
 getJSONP.count = 0
 
 function padLeftZero(str) {
-	return ('00' + str).substr(str.length)
+	return ('00' + str).slice(str.length)
 }
 
 
