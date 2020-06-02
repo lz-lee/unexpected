@@ -54,7 +54,7 @@ function removeDuplicates(arr) {
  * 动态规划：其思想是重新对变量赋值，重复利用变量，一般会要声明多个变量
  * 在这里，sum 如果小于 0 则舍弃，将下一个 i 赋值给 sum；
  * sum 如果大于 0 则继续累加
- * @param {nums: number[]}
+ * @param {nums: number[]} [-2,1,-3,4,-1,2,1,-5,4]
  * @return number
  */
 

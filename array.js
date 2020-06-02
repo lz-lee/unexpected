@@ -75,10 +75,12 @@ function selectSort(arr) {
     const len = arr.length;
 
     for (let i = 0; i < len - 1; i++) {
+        // 假设当前 i 为最小数
         let min = i;
         for (let j = i + 1; j < len; j++) {
+            // 剩余数与最小数比较
             if (arr[j] < arr[min]) {
-                // 每次将小的那项的索引重新赋值给min
+                // 找出最小数的位置， 每次将小的那项的索引重新赋值给min
                 min = j;
             }
         }
@@ -123,8 +125,10 @@ function mergeSort(arr) {
     if (arr.length === 1) return arr;
     const len = arr.length;
     const mid = Math.floor(len / 2);
-    const left = arr.splice(0, mid); // 用 array.splice 取代 array.slice，减少一半的空间消耗。
-    const right = arr;
+    // 用 array.splice 取代 array.slice，减少一半的空间消耗，但是会改变原数组
+    // const left = arr.splice(0, mid);
+    const left = arr.slice(0, mid);
+    const right = arr.slice(mid);
     return merge(mergeSort(left), mergeSort(right))
 }
 
