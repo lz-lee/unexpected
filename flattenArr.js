@@ -31,9 +31,9 @@ function flatten3(arr, deep = Infinity) {
     const newArr = [...arr];
 
     while(newArr.length) {
-        const item = newArr.shift();
+        const item = newArr.shift(); // 从队首取元素
         if (Array.isArray(item) && deep) {
-            newArr.unshift(...item);
+            newArr.unshift(...item); // 如果是数组继续加入到原数组里
             deep--;
         } else {
             stack.push(item);

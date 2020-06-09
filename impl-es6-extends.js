@@ -128,6 +128,7 @@ function _instanceof(left, right) {
 
 function _classCallCheck(instance, Constructor) {
     // 只能被 new 操作调用
+
     if (!_instanceof(instance, Constructor)) {
         throw new TypeError('Cannot call a class as a function');
     }

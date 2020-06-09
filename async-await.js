@@ -1,14 +1,14 @@
 // console.log('script start');
 
-// async function async1() {
-//   console.log("async1 start");
-//   await async2();
-//   console.log("async1 end");
-// }
+async function async1() {
+  console.log("async1 start");
+  await async2();
+  console.log("async1 end");
+}
 
-// async function async2() {
-//   console.log("async2 start");
-// }
+async function async2() {
+  console.log("async2 start");
+}
 
 // async1();
 

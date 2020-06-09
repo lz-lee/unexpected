@@ -66,6 +66,7 @@ export function shuffle(arr) {
  * 去抖函数
  * @param {Function} fn
  * @param {Number} delay
+ * 在一段时间内用户连续操作不触发，在用户停止某操作后触发
  */
 export function debounce(fn, delay) {
   let timer
@@ -79,19 +80,15 @@ export function debounce(fn, delay) {
 
 /**
  * 截流函数
+ * 每隔一段时间触发
  */
 
 export function throttle(func, delay) {
-  let last, timer
+  let last = 0;
   return function(...args) {
       const now = Date.now()
-      if (last && now - last < delay) {
-          clearTimeout(timer)
-          timer = setTimeout(() => {
-              last = now
-              func.apply(this, args)
-          }, delay)
-      } else {
+
+      if (now - last > delay) {
           last = now
           func.apply(this, args)
       }
