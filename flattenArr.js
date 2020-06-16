@@ -1,29 +1,29 @@
 var arr = [1,2,3, ['a', 'b', ['c', ['d']]], 'f'];
 
 // 递归的形式
-function flatten1(arr, deep) {
+function flat1(arr, deep) {
     const ret = [];
     for (let i of arr) {
         if (Array.isArray(i) && deep) {
             deep--
-            ret.push(...flatten1(i, deep))
+            ret.push(...flat1(i, deep))
         } else {
             ret.push(i);
         }
     }
     return ret;
 }
-flatten1(arr, 2);
+flat1(arr, 2);
 
 // 迭代的形式
-function flatten2(arr, deep) {
+function flat2(arr, deep) {
     while(deep && arr.some(v => Array.isArray(v))) {
         arr = [].concat(...arr);
         deep--
     }
     return arr;
 }
-flatten2(arr, 2);
+flat2(arr, 2);
 
 // 栈
 function flatten3(arr, deep = Infinity) {

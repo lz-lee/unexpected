@@ -86,4 +86,4 @@ function* loadOne(url, time) {
 }
 
 const arr = ['url1', 'url2', 'url3', 'url4'];
-loadDataOrder3(arr);
+loadDataOrder1(arr);

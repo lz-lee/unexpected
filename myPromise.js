@@ -175,7 +175,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
 
     if (self.status === 'pending') {
         return (promise2 = new Promise(function (resolve, reject) {
-            self.onResolvedCallback.push(function (value) {
+            self.onResolvedCallback.push(function () {
                 try {
                     var x = onResolved(self.data);
                     // if (x instanceof Promise) {
@@ -188,7 +188,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
                 }
             });
 
-            self.onRejectedCallback.push(function (reason) {
+            self.onRejectedCallback.push(function () {
                 try {
                     var x = onRejected(self.data);
                     // if (x instanceof Promise) {

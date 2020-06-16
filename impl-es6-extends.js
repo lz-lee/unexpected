@@ -90,7 +90,7 @@ function _possibleConstructorReturn(self, call) {
 
 // 断言如果没有父类构造函数执行的结果，则警告
 function _assertThisInitialized(self) {
-    if (self === void 0) {
+    if (self === void 0) { // self === undefined
         throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
     }
     return self;

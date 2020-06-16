@@ -68,8 +68,8 @@ function _asyncToGenerator(fn) {
                     resolve(value);
                 } else {
                     return Promise.resolve(value).then(
-                        function (value) {
-                            step('next', value); // yield async2 之后的代码在这次 task 里执行
+                        function (val) {
+                            step('next', val); // yield async2 之后的代码在这次 task 里执行
                         },
                         function (err) {
                             step('throw', err);
