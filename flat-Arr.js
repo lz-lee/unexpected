@@ -26,7 +26,7 @@ function flat2(arr, deep) {
 flat2(arr, 2);
 
 // 栈
-function flatten3(arr, deep = Infinity) {
+function flat3(arr, deep = Infinity) {
     const stack = [];
     const newArr = [...arr];
 
@@ -41,4 +41,4 @@ function flatten3(arr, deep = Infinity) {
     }
     return stack;
 }
-flatten3(arr);
+flat3(arr);

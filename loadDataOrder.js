@@ -37,7 +37,7 @@ async function loadDataOrder1(arr) {
 }
 
 /**
- * 方法二：reducer 函数，依次处理，传入的参考值为 Promise.resolve() 函数
+ * 方法二：reduce 函数，依次处理，传入的参考值为 Promise.resolve() 函数
  * @param {[url1, url2, url3]} arr
  */
 function loadDataOrder2(arr) {
@@ -46,7 +46,12 @@ function loadDataOrder2(arr) {
         const p = await fetchAPI(item, time);
         return p;
     });
-    promises.reducer((chain, p, index) => chain.then(() => p).then(data => console.log(data).catch(err => console.log(err))), Promise.resolve());
+    promises.reduce((chain, p, index) => {
+        return chain
+            .then(() => p)
+            .then(data => console.log(data))
+            .catch(err => console.log(err));
+    }, Promise.resolve());
 }
 
 // 方法一 二 都没有单独处理错误的和数据
@@ -86,4 +91,4 @@ function* loadOne(url, time) {
 }
 
 const arr = ['url1', 'url2', 'url3', 'url4'];
-loadDataOrder1(arr);
+loadDataOrder2(arr);

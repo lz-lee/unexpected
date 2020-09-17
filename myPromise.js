@@ -263,9 +263,9 @@ Promise.resolve = function (val) {
     if (val instanceof Promise) {
         return val;
     }
-    return new Promise((resolve, reject) => {
-        resolve(val);
-    });
+    return (promsie = new Promise((resolve, reject) => {
+        resolvePromise(promise, val, resolve, reject);
+    }));
 };
 
 Promise.reject = function (reason) {

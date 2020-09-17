@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    div {
+        color: red;
+    }
+</style>
+<body>
+    <div>this is test composition api</div>
+    <input type="text" id="test">
+</body>
+<script>
+    test.addEventListener('input', (e) => {
+        console.log('input ', e.target.value);
+    })
+</script>
+</html>

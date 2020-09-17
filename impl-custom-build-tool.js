@@ -1,3 +1,4 @@
+// memory-fs  webpack 的自定义文件系统从内存中读写文件，而不是从磁盘上，速度更快
 const fs = require('fs');
 const path = require('path');
 const babylon = require('babylon');
