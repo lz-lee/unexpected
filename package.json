@@ -29,6 +29,7 @@
     "babylon": "^6.18.0",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.11",
+    "node-xlsx": "^0.15.0",
     "redux-immutable": "^4.0.0",
     "redux-saga": "^1.1.3"
   }

@@ -44,6 +44,7 @@ function _inherits(subClass, superClass) {
         constructor: { value: subClass, writable: true, configurable: true },
     });
     // 继承父类的静态属性
+    // 指定 Child 的原型
     // 直接将 Child.__proto__ = Parent; 即可以通过 Child.xxx 直接访问 Parent.xxx
     if (superClass) _setPrototypeOf(subClass, superClass);
 }
