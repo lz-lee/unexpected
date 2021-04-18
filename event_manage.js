@@ -86,7 +86,7 @@ class Event {
 const sayHi = (name) => console.log(`Hello ${name}`)
 const sayHi2 = (name) => console.log(`Good night, ${name}`)
 
-const myEvent = new event()
+const myEvent = new Event()
 // myEvent.on('hi', sayHi)
 // myEvent.on('hi', sayHi2)
 
@@ -109,3 +109,17 @@ const token2 = myEvent.on('hi', (name) => console.log(`Good night, ${name}`))
 
 myEvent.off('hi', token1)
 myEvent.emit('hi', 'niuniu')
+
+// Proxy 实现观察者
+const obj = {
+  cbs: [],
+}
+const proxyObj = new Proxy(obj, {
+  set: (target, prop, value, receiver) => {
+    target.cbs.forEach(fn => fn())
+    return Reflect.set(target, prop, value, receiver)
+  }
+})
+const print = () => console.log(obj.name)
+obj.cbs.push(print)
+obj.name = 'xxx'

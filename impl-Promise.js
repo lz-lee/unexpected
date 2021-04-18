@@ -55,11 +55,11 @@ function Promise(executor) {
  * @param {*} reject
  */
 
-function resolvePromise(promise, x, resolve, reject) {
+function resolvePromise(promise2, x, resolve, reject) {
     var then;
     var isThenCalledOrThrow = false;
 
-    if (promise === x) {
+    if (promise2 === x) {
         // 2.3.1
         // then里不能返回 this
         return reject(new TypeError('promise 循环引用'));

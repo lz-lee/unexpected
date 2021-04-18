@@ -18,8 +18,8 @@ flat1(arr, 2);
 // 迭代的形式
 function flat2(arr, deep) {
     while(deep && arr.some(v => Array.isArray(v))) {
-        arr = [].concat(...arr);
         deep--
+        arr = [].concat(...arr);
     }
     return arr;
 }
@@ -33,8 +33,8 @@ function flat3(arr, deep = Infinity) {
     while(newArr.length) {
         const item = newArr.shift(); // 从队首取元素
         if (Array.isArray(item) && deep) {
-            newArr.unshift(...item); // 如果是数组继续加入到原数组里
             deep--;
+            newArr.unshift(...item); // 如果是数组继续加入到原数组里
         } else {
             stack.push(item);
         }

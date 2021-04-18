@@ -26,6 +26,9 @@ async function loadDataOrder1(arr) {
         const p = await fetchAPI(item, time);
         return p;
     });
+    // Promise.all(promises).then((res) => {
+    //     console.log('res is >>>>>>>>>>>', res)
+    // })
     for (const item of promises) {
         try {
             const data = await item;
@@ -76,19 +79,19 @@ async function loadDataOrder3(arr) {
         } catch(err) {
             console.log(err);
         } finally {
-            console.log(p);
-            // next 传入的 p 是 resolve 过后的 p，那么在 loadOne 里，yield 暂停后再执行 gen.next(p),即将这个 resolve 的 promise 传递给上一次 yield 的返回值 p
+            console.log('resolve 了 Promise >>>', p);
+            // next 传入的 p 是 resolve 过后的 p，那么在 loadOne 里，yield 暂停后再执行 gen.next(p),即将这个 resolve 的 promise 传递给上一次 yield 的返回值 pData
             gen.next(p);
         }
     }
 }
 
 function* loadOne(url, time) {
-    const p = yield fetchAPI(url, time);
-    p.then(data => {
+    const pData = yield fetchAPI(url, time);
+    pData.then(data => {
         console.log('load one ===> ', data)
     }).catch(err => console.log(err));
 }
 
 const arr = ['url1', 'url2', 'url3', 'url4'];
-loadDataOrder2(arr);
+loadDataOrder3(arr);

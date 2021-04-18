@@ -58,7 +58,7 @@ function _asyncToGenerator(fn) {
                 try {
                     var info = gen[key](arg);
                     // 执行到 async2 的时候 info === { done: true, value: undefined };
-                    // 执行到 async1 里面的 yield async2 的时候 info === { done: false, value: Promise }, 因为 async2 返回的是一个 resolve 状态的 Promise ，因此 console.log("async1 end"); 这一行会被滞留到 microTask 的 then 里面的 step('next', value) 执行了。如果在这之前有其他先加入 microTask 的任务，那么会先执行其他的任务。
+                    // 执行到 async1 里面的 yield async2 的时候 info === { done: false, value: Promise }, 因为 async2 返回的是一个 resolve 状态的 Promise ，因此 "console.log("async1 end");" 这一行会被滞留到 microTask 的 then 里面的 step('next', value) 执行了。如果在这之前有其他先加入 microTask 的任务，那么会先执行其他的任务。
                     var value = info.value;
                 } catch (err) {
                     reject(err);
