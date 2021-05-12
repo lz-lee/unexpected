@@ -43,12 +43,11 @@ Function.prototype.bind = function (ctx, ...args) {
 };
 
 // 方案二
-Function.prototype.myBind = function (context) {
+Function.prototype.myBind = function (context, ...args) {
     if (typeof this !== 'function') {
         throw new TypeError('Error');
     }
     const _this = this;
-    const args = [...arguments].slice(1);
     return function F() {
         if (this instanceof F) {
             // if (new.target === F)
@@ -63,6 +62,7 @@ Function.prototype.myBind = function (context) {
 function foo(...args) {
     console.log(args, '<<<args');
     this.args = args;
+    console.log(this.name, '<<this.name')
 }
 
 var ff = foo.bind({ name: 'AAA' }, 1, 2, 3);

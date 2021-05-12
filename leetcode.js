@@ -80,7 +80,7 @@ function maxSubArr(arr) {
  * 怎么求 dp[i] ?
  * 既然是递增子序列，我们只要找到前面那些结尾比 nums[i] 小的子序列(即如果nums[j] < nums[i])，然后把 nums[i] 接到最后，就可以形成一个新的递增子序列，而且这个新的子序列长度加一.(即 在 dp[j] 这个位置开始长度加 1)
  * 显然，可能形成很多种新的子序列，但是我们只选择最长的那一个，把最长子序列的长度作为 dp[i] 的值即可。
- * https://labuladong.github.io/ebook/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%B3%BB%E5%88%97/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1%EF%BC%9A%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97.html
+ * https://labuladong.gitbook.io/algo/di-er-zhang-shou-ba-shou-shua-dong-tai-gui-hua/zi-xu-lie-lei-xing-wen-ti/dong-tai-gui-hua-she-ji-zui-chang-di-zeng-zi-xu-lie
  */
 
 function lengthOfLIS(nums) {
@@ -104,4 +104,16 @@ function maxDepth(root) {
     if (!root) return 0;
     if (!root.left && !root.right) return 1;
     return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+}
+
+/**
+ * 491.求递增子序列 -- https://leetcode-cn.com/problems/increasing-subsequences/
+ * 动态规划
+ * 输入：[4, 6, 7, 7]
+ * 输出：[[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+ */
+
+function findSubsequences (nums) {
+    const dp = nums.map((v, i) => [v])
+
 }
