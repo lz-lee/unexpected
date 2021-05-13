@@ -207,6 +207,7 @@ Promise.prototype.catch = function (onRejected) {
     return this.then(null, onRejected);
 };
 
+// 适合彼此相互依赖或者在其中任何一个reject时立即结束。
 Promise.all = function (promises) {
     return new Promise((resolve, reject) => {
         var count = 0;
@@ -243,6 +244,30 @@ Promise.all = function (promises) {
         // }
     });
 };
+
+// 返回一个在所有给定的promise都已经fulfilled或rejected后的promise，并带有一个对象数组，每个对象表示对应的promise结果, 彼此不依赖
+Promise.allSettled = function (promises) {
+    return new Promise((resolve, reject) => {
+        let len = promises.length;
+        const result = []
+        const getStatus = () => {
+            if (--len === 0) {
+                resolve(result)
+            }
+        }
+        for (const [i, promise] of promises) {
+            Promise.resolve(promise).then(
+                (val) => {
+                    result[i] = { status: 'fulfilled', value: val}
+                    getStatus()
+                },
+                (err) => {
+                    result[i] = { status: 'rejected', reason: err }
+                    getStatus()
+                })
+        }
+    })
+}
 
 Promise.race = function (promises) {
     return new Promise((resolve, reject) => {
