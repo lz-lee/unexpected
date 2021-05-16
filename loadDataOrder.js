@@ -16,16 +16,18 @@ function fetchAPI(url, time, err) {
         }, time);
     });
 }
+const arr = ['url1', 'url2', 'url3', 'url4'];
+const promises = arr.map(async (item, index) => {
+    const time = (index + 1) % 2 * 1000;
+    const p = await fetchAPI(item, time);
+    return p;
+});
+
 /**
  * 方法一：for……of 顺序输出
  * @param {[url1, url2, url3]} arr
  */
-async function loadDataOrder1(arr) {
-    const promises = arr.map(async (item, index) => {
-        const time = (index + 1) % 2 * 1000;
-        const p = await fetchAPI(item, time);
-        return p;
-    });
+async function loadDataOrder1(promises) {
     // Promise.all(promises).then((res) => {
     //     console.log('res is >>>>>>>>>>>', res)
     // })
@@ -43,12 +45,7 @@ async function loadDataOrder1(arr) {
  * 方法二：reduce 函数，依次处理，传入的参考值为 Promise.resolve() 函数
  * @param {[url1, url2, url3]} arr
  */
-function loadDataOrder2(arr) {
-    const promises = arr.map(async (item, index) => {
-        const time = (index + 1) % 2 * 1000;
-        const p = await fetchAPI(item, time);
-        return p;
-    });
+function loadDataOrder2(promises) {
     promises.reduce((chain, p, index) => {
         return chain
             .then(() => p)
@@ -93,5 +90,22 @@ function* loadOne(url, time) {
     }).catch(err => console.log(err));
 }
 
-const arr = ['url1', 'url2', 'url3', 'url4'];
-loadDataOrder3(arr);
+// loadDataOrder3(arr);
+
+function createQueue(promises) {
+    const t = promises
+    const next = () => {
+        const cur = t.shift();
+        if (cur) {
+            return Promise.resolve(cur).then((val) => {
+                console.log(val)
+                return next()
+            })
+        } else {
+            return Promise.resolve('done')
+        }
+    }
+    return next()
+}
+
+createQueue(promises)

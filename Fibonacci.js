@@ -27,11 +27,12 @@ function fb(n) {
 
 // 动态规划
 function fab(n) {
-    let n1 = 1, n2 = 1, sum = 1;
-    for (let i = 3; i <= n; i++) {
-      sum = n1 + n2;
-      n1 = n2;
-      n2 = sum;
+    if (n < 2) return n
+    let n1 = 0, n2 = 0, sum = 1;
+    for (let i = 2; i <= n; i++) {
+        n1 = n2;
+        n2 = sum;
+        sum = n1 + n2;
     }
     return sum;
 }

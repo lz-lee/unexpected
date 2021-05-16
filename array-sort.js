@@ -20,6 +20,23 @@ function bubbleSort1(arr) {
     return arr;
 }
 
+// 优化的冒泡排序
+function betterBubbleSort(arr) {
+    const len = arr.length
+    for (let i = 0; i < len; i++) {
+        let flag = false
+        for (let j = 0; j < len - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr, j, j + 1);
+                // 只要发生了一次交换，就修改标志位
+                flag = true
+            }
+        }
+         // 若一次交换也没发生，则说明数组有序，直接放过
+        if (!flag) return arr
+    }
+}
+
 /**
  * 冒泡排序加入第二个参数控制升序降序
  */
@@ -70,6 +87,7 @@ function bubbleSort2(arr) {
 
 // 插入排序
 /**
+ * 核心思想是: “找到元素在它前面那个序列中的正确位置”
   1、数组从 i = 1 开始， i < arr.length 而不是 length - 1
   2、取 j = i, 从 j 位置开始遍历,
   3、如果 arr[j - 1] > arr[j] && j > 0 交换两个位置（即数组前一项大于后一项）
@@ -93,12 +111,20 @@ function insertSort(arr) {
   4、 i + 1 继续循环
 */
 function selectSort(arr) {
-    for (let i = 0; i < arr.length - 1; i++) {
-        let minIndex = i;
-        for (let j = i + 1; j < arr.length; j++) {
+    const len = arr.length
+    // 定义 minIndex，缓存当前区间最小值的索引，注意是索引
+    let minIndex
+    for (let i = 0; i < len - 1; i++) {
+         // 初始化 minIndex 为当前区间第一个元素
+        minIndex = i;
+        // i、j分别定义当前区间的上下界，i是左边界，j是右边界
+        for (let j = i; j < len; j++) {
             minIndex = arr[j] < arr[minIndex] ? j : minIndex;
         }
-        swap(arr, i, minIndex);
+        // 如果 minIndex 对应元素不是目前的头部元素，则交换两者
+        if (minIndex !== i) {
+            swap(arr, i, minIndex);
+        }
     }
     return arr;
 }
