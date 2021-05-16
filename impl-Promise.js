@@ -298,6 +298,19 @@ Promise.reject = function (reason) {
         reject(reason);
     });
 };
+
+Promise.finally = function(cb) {
+    return this.then(
+        (value) => {
+            return Promise.resolve(cb()).then(() => value);
+        },
+        (err) => {
+            return Promise.resolve(cb()).then(() => {
+                throw err
+            })
+        }
+    )
+}
 // 如何停止一个Promise, 即不执行promise链后续的promise的 resolve / reject 方法
 // https://github.com/xieranmaya/blog/issues/5
 
