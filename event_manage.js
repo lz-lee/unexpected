@@ -48,17 +48,11 @@ Evetn.emit('search', 'doing something')
 class Event {
   constructor() {
     this.events = {}
-    this.index = -1
   }
 
   on(type, callback) {
-    let token = (this.index++).toString()
     this.events[type] = this.events[type] || []
-    this.events[type].push({
-      token: token,
-      callback: callback
-    })
-    return token
+    this.events[type].push(callback)
   }
 
   emit(type, ...args) {
@@ -70,13 +64,13 @@ class Event {
     }
   }
 
-  off(type, token) {
+  off(type, cb) {
     if (!this.events[type]) {
       return
     }
     let len = this.events[type].length
     for (let i = 0; i < len; i++) {
-      if (this.events[type][i].token === token) {
+      if (this.events[type][i] === cb) {
         this.events[type].splice(i, 1)
         break
       }
