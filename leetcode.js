@@ -108,14 +108,40 @@ function maxDepth(root) {
 
 /**
  * 491.求递增子序列 -- https://leetcode-cn.com/problems/increasing-subsequences/
- * 动态规划
+ * 递归--也是求组合问题，只不过这个组合是排序的
  * 输入：[4, 6, 7, 7]
  * 输出：[[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
  */
 
 function findSubsequences (nums) {
-    const dp = nums.map((v, i) => [v])
+    const len = nums.length
+    const res = []
+    const subset = []
+    // 判断是否重复 push
+    const set = new Set()
+    function dfs(n) {
+        if (subset.length > 1) {
+            const str = subset.toString()
+            if (!set.has(str)) {
+                res.push(subset.slice())
+                set.add(str)
+            }
+        }
+        for (let i = n; i < len; i++) {
+            // 上一个选择，即path数组的末尾元素
+            const prev = subset[subset.length - 1]
+            //  如果path为空，或满足递增关系，则可选择
+            if (subset.length === 0 || prev <= nums[i]) {
+                subset.push(nums[i])
+                // 基于当前数字存在于组合中的情况，继续 dfs，找到与当前数字存在的所有组合
+                dfs(i + 1)
+                subset.pop()
+            }
+        }
+    }
 
+    dfs(0)
+    return res
 }
 
 /**
@@ -722,3 +748,21 @@ const coinMinCount = (coins, amount) => {
     return f[amount]
 }
 
+
+/**
+ * 无重复字符最长子串
+ */
+
+const lengthOfLongestSubstring = str => {
+    const stack = []
+    let max = 0
+    for (let i of str) {
+        let index = stack.indexOf(i)
+        if (index !== -1) {
+            // 出现过，那么需要删除 i 及 i 之前的元素，也就是从第 1 个元素到 i 这个元素
+            stack.splice(0, index + 1)
+        }
+        stack.push(i)
+        max = Math.max(stack.length, max)
+    }
+}
