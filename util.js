@@ -63,7 +63,7 @@ export function shuffle(arr) {
 }
 
 /**
- * 去抖函数
+ * 防抖函数
  * @param {Function} fn
  * @param {Number} delay
  * 在一段时间内用户连续操作不触发，在用户停止某操作后触发
@@ -79,7 +79,7 @@ export function debounce(fn, delay) {
 }
 
 /**
- * 截流函数
+ * 截流函数--时间戳
  * 每隔一段时间触发
  */
 
@@ -89,9 +89,28 @@ export function throttle(func, delay) {
       const now = Date.now()
 
       if (now - last > delay) {
+        func.apply(this, args)
           last = now
-          func.apply(this, args)
+      } else {
+        console.log('时间差不到要求')
       }
+  }
+}
+/**
+ * 截流--定时器
+ * @returns
+ */
+function throttle1(func, delay) {
+  let timer
+  return (...args) => {
+    if (!timer) {
+      func.apply(this, args)
+      timer = setTimeout(() => {
+        timer = null
+      }, delay)
+    } else {
+      console.log('上一个定时器还没完成')
+    }
   }
 }
 /**

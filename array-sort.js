@@ -180,7 +180,7 @@ function mergeSort(arr) {
 
 // 二分查找
 /**
-  核心逻辑：折半思想
+  核心逻辑：折半思想， 也是双指针思想
   如果 val 比中间数小，则改 max 为 mid - 1
   如果 val 比中间数大，则改 min 为 mid + 1
 */

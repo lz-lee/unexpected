@@ -513,9 +513,11 @@ const permute = nums => {
     const res = []
     // 记录一次排列过程中访问过的数字，避免重复
     const visit = {}
+    // 定义 dfs 函数，入参是坑位的索引（从 0 计数）
     function dfs(n) {
-        // 递归边界
+        // 递归边界,  遍历到了不存在的坑位（第 len+1 个），则触碰递归边界返回
         if (n === len) {
+            // 此时前 len 个坑位已经填满，将对应的排列记录下来
             res.push(cur.slice())
             return
         }
@@ -524,6 +526,7 @@ const permute = nums => {
                 // 标识已访问过
                 visit[i] = true
                 cur.push(i)
+                // 基于这个排列继续往下一个坑走去
                 dfs(n+1)
                 // 一次排列的回归，还原
                 visit[i] = false
@@ -531,6 +534,7 @@ const permute = nums => {
             }
         }
     }
+     // 从索引为 0 的坑位（也就是第一个坑位）开始 dfs
     dfs(0)
     return res
 }
@@ -645,3 +649,76 @@ const invertTree = root => {
     }
     return root
 }
+/**
+ * 动态规划--爬楼梯
+ * 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+ * 关键特征：
+ *  1、要求你给出达成某个目的的解法个数
+ *  2、不要求你给出每一种解法对应的具体路径
+ * 思想：倒着分析问题-->得出状态转移方程
+ */
+
+// 递归计算 -- 这是非尾调用优化的
+const climbStep = n => {
+    if (n < 3) return n
+    return climbStep(n - 1) + climbStep(n - 2)
+}
+
+// 尾调用优化
+const climbStepBetter1 = (n, n1 = 0, n2 = 1) => {
+    if (n <= 1) return n2
+    return climbStepBetter1(n -1, n2, n1 + n2)
+}
+
+// 动态规划
+const climbStepBetter2 = n => {
+    if (n < 3) return n
+    let sum = 0
+    let n1 = 1
+    let n2 = 2
+    for (let i = 3; i <= n; i++) {
+        n1 = n2
+        n2 = sum
+        sum = n1 + n2;
+    }
+    // 或者用记忆化数组更直观
+    // let f = []
+    // f[1] = 1
+    // f[2] = 2
+    // for (let i = 3; i<= n; i++) {
+    //     f[i] = f[n - 1] + f[n - 2]
+    // }
+    // return f[n]
+    return sum
+}
+
+/**
+ * 见到最值问题，应该想到动态规划
+ * "最值问题": 给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1
+ * 示例：输入: coins = [1, 2, 5], amount = 11
+ * 输出： 3
+ * 解释: 11 = 5 + 5 + 1
+ */
+
+const coinMinCount = (coins, amount) => {
+    // 用于保存每个目标总额对应的最小硬币个数
+    const f = []
+
+    f[0] = 0
+    // 遍历  [1, amount] 这个区间的硬币总额
+    for (let i = 1; i <= amount; i++) {
+        // 求的是最小值，因此我们预设为无穷大，确保它一定会被更小的数更新
+        f[i] = Infinity
+        // 遍历每个可用硬币的面额
+        for (let j = 0; j < coins.length; i++) {
+            // 如果硬币面额小于目标总值，那么问题成立
+            if ( i > coins[j]) {
+                f[i] = Math.min(f[i], f[i - coins[j]] + 1)
+            }
+        }
+    }
+    // 若目标总额对应的解为无穷大，则意味着没有一个符合条件的硬币总数来更新它，本题无解，返回-1
+    if (f[amount] === Infinity) return -1
+    return f[amount]
+}
+
