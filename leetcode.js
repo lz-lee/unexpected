@@ -699,9 +699,9 @@ const climbStepBetter1 = (n, n1 = 0, n2 = 1) => {
 // 动态规划
 const climbStepBetter2 = n => {
     if (n < 3) return n
-    let sum = 0
+    let sum = 2
     let n1 = 1
-    let n2 = 2
+    let n2 = 1
     for (let i = 3; i <= n; i++) {
         n1 = n2
         n2 = sum
@@ -765,4 +765,30 @@ const lengthOfLongestSubstring = str => {
         stack.push(i)
         max = Math.max(stack.length, max)
     }
+    return max
 }
+
+/**
+ * 双指针 -- 数组按奇偶排序
+ * https://leetcode-cn.com/problems/sort-array-by-parity/
+ * 输入：[3,1,2,4]
+    输出：[2,4,3,1]
+    输出 [4,2,3,1]，[2,4,1,3] 和 [4,2,1,3] 也会被接受。
+ */
+
+const sortArrayByParity = nums => {
+    // return nums.sort((a, b) => a % 2 - b % 2)
+    let slow = 0
+    let fast = 0
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] % 2 === 0) {
+            [arr[slow], arr[fast]] = [arr[fast], arr[slow]]
+            slow++
+            fast++
+        } else {
+            fast++
+        }
+    }
+    return nums
+}
+
