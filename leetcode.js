@@ -149,9 +149,10 @@ function findSubsequences (nums) {
  * 合并两个有序数组
  */
 
-const merge = (nums1, m, nums2, n) => {
+const mergeArr = (nums1, m, nums2, n) => {
     // 初始化两个指针的指向，初始化 nums1 的尾部索引 k
-    let i = m -1, j = n -1, k = m + n -1
+    // 从后往前排，大数在后边，将 nums2 的数插入到 nums1 中，原地合并
+    let i = m - 1, j = n - 1, k = m + n -1
 
     while(i >= 0 && j >= 0) {
         if (nums1[i] >= nums2[j]) {
@@ -166,11 +167,12 @@ const merge = (nums1, m, nums2, n) => {
     }
     // nums2 没有剩余，剩下的是 nums1，则不需要处理
     // nums2 还有剩余的情况，直接把剩余的补到 nums1 中
-    if (j >= 0) {
+    while (j >= 0) {
         nums1[k] = nums2[j]
         j--
         k--
     }
+    return nums1
 }
 
 /**
@@ -472,6 +474,18 @@ const getStr = str => {
     }
     return stack.join('')
 }
+/**
+ * 去除重复字符
+*/
+const removeDuplicateStr = str => {
+    const stack = []
+    for (const i of str) {
+        if (`${stack[stack.length - 1]}` !== i) {
+            stack.push(i)
+        }
+    }
+    return stack.join('')
+}
 
 // console.log(getStr('aaabbccc'))
 
@@ -720,13 +734,14 @@ const climbStepBetter2 = n => {
 
 /**
  * 见到最值问题，应该想到动态规划
+ * https://leetcode-cn.com/problems/coin-change/
  * "最值问题": 给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1
  * 示例：输入: coins = [1, 2, 5], amount = 11
  * 输出： 3
  * 解释: 11 = 5 + 5 + 1
  */
 
-const coinMinCount = (coins, amount) => {
+const coinChange = (coins, amount) => {
     // 用于保存每个目标总额对应的最小硬币个数
     const f = []
 
@@ -736,9 +751,9 @@ const coinMinCount = (coins, amount) => {
         // 求的是最小值，因此我们预设为无穷大，确保它一定会被更小的数更新
         f[i] = Infinity
         // 遍历每个可用硬币的面额
-        for (let j = 0; j < coins.length; i++) {
+        for (let j = 0; j < coins.length; j++) {
             // 如果硬币面额小于目标总值，那么问题成立
-            if ( i > coins[j]) {
+            if (i >= coins[j]) {
                 f[i] = Math.min(f[i], f[i - coins[j]] + 1)
             }
         }
@@ -792,3 +807,160 @@ const sortArrayByParity = nums => {
     return nums
 }
 
+/**
+ * 二叉树所有路径和 -- 递归
+ * https://leetcode-cn.com/problems/binary-tree-paths/
+ */
+
+const binaryTreePaths = root => {
+    const res = []
+    const dfs = (r, s) => {
+        if (!r) return
+        if (!r.left && !r.right) {
+            s += r.val
+            res.push(s)
+            return
+        }
+        s += `${r.val}->`
+        dfs(r.left, s)
+        dfs(r.right, s)
+    }
+    dfs(root, '')
+    return res
+}
+/**
+ * 螺旋矩阵
+ * 输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+ * 输出：[1,2,3,6,9,8,7,4,5]
+ * https://leetcode-cn.com/problems/spiral-matrix/submissions/
+ */
+const  spiralOrder = matrix => {
+    const res = []
+    let top = 0
+    let right = matrix[0].length - 1
+    let bottom = matrix.length - 1
+    let left = 0
+    const size = matrix.length * matrix[0].length
+    while (res.length !== size) {
+        for (let i = left; i <= right; i++) res.push(matrix[top][i])
+        top++
+        for (let i = top; i <= bottom; i++) res.push(matrix[i][right])
+        right--
+        if (size === res.length) break
+        for (let i = right; i >= left; i--) res.push(matrix[bottom][i])
+        bottom--
+        for (let i = bottom; i >= top; i--) res.push(matrix[i][left])
+        left++
+    }
+    return res
+}
+/**
+ * 螺旋矩阵 ii
+ * https://leetcode-cn.com/problems/spiral-matrix-ii/
+ * 输入：n = 3
+ * 输出：[[1,2,3],[8,9,4],[7,6,5]]
+ */
+const generateMatrix = n => {
+    const size = n * n
+    const res = new Array(n).fill(0).map(i => new Array(n).fill(0))
+    let top = 0
+    let right = n - 1
+    let bottom = n - 1
+    let left = 0
+    let num = 1
+
+    while(num <= size) {
+        for (let i = left; i<= right; i++) res[top][i] = num++
+        top++
+        for (let i = top; i <= bottom; i++) res[i][right] = num++
+        right--
+        if (num === size) break
+        for (let i = right; i >= left; i--) res[bottom][i] = num++
+        bottom--
+        for (let i = bottom; i >= top; i--) res[i][left] = num++
+        left++
+    }
+    return res
+}
+
+/**
+ * 旋转图像
+ * https://leetcode-cn.com/problems/rotate-image/
+ */
+const rotate = matrix => {
+    // 开辟空间旋转
+    // 对于矩阵中第 i 行的第 j 个元素，在旋转后，它出现在倒数第 i 列的第 j 个位置。
+    const n = matrix.length
+    const res = new Array(n).fill(0).map(i => new Array(n).fill(0))
+    for (let row = 0; row < n; row++) {
+        for (let col = 0; col < n; col++) {
+            res[col][n - row - 1] = matrix[row][col]
+        }
+    }
+    return res
+}
+const rotate2 = matrix => {
+    // 原地旋转
+    // 用翻转代替旋转的方法
+    const n = matrix.length
+
+    // 水平翻转
+    for (let row = 0; row < Math.floor(n / 2 ); row++) {
+        for (let col = 0; col < n; col++) {
+            [matrix[row][col], matrix[n - row - 1][col]] = [matrix[n - row - 1][col], matrix[row][col]]
+        }
+    }
+    // 主对角线翻转
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < i; j++) {
+            [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]]
+        }
+    }
+    return matrix
+}
+
+/**
+ * 两两交换链表中相邻的节点，返回新的链表
+ * https://leetcode-cn.com/problems/swap-nodes-in-pairs/
+ */
+const swapListNode = head => {
+    // 方法一 迭代
+    const dummy = new ListNode('')
+    dummy.next = head
+    let cur = dummy
+    while (cur.next && cur.next.next) {
+        const node1 = cur.next
+        const node2 = cur.next.next
+        cur.next = node2
+        node1.next = node2.next
+        node2.next = node1
+        cur = node1
+    }
+    return dummy.next
+    // 方法二 递归
+    // if (!head || !head.next) return head
+    // const cur = head.next
+    // head.next = swapListNode(cur.next)
+    // cur.next = head
+    // return cur
+}
+
+/**
+ * 不同路径
+ * https://leetcode-cn.com/problems/unique-paths/
+ */
+const uniquePaths = function(m, n) {
+    const f = new Array(m).fill(0).map(() => new Array(n).fill(0))
+    for (let i = 0; i < m; i++) {
+        f[i][0] = 1
+    }
+    for (let j = 0; j < n; j++) {
+        f[0][j] = 1
+    }
+    for (let i = 1;i < m; i++) {
+        for (let j = 1; j < n; j++) {
+            f[i][j] = f[i-1][j] + f[i][j-1]
+        }
+    }
+    return f[m-1][n-1]
+};
