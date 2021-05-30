@@ -543,7 +543,7 @@ const getTemperatures = arr => {
 
 /**
  * 递归-全排列
- * https://leetcode-cn.com/problems/permutations/submissions/
+ * https://leetcode-cn.com/problems/permutations
  *
  */
 const permute = nums => {
@@ -766,6 +766,7 @@ const coinChange = (coins, amount) => {
 
 /**
  * 无重复字符最长子串
+ * https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
  */
 
 const lengthOfLongestSubstring = str => {
@@ -964,3 +965,165 @@ const uniquePaths = function(m, n) {
     }
     return f[m-1][n-1]
 };
+
+/**
+ * 整数反转
+ * https://leetcode-cn.com/problems/reverse-integer/
+ * 思想：取余。
+ * 余 10 拿到末位，再加回来
+ */
+
+const reverseInteger = x => {
+    let res = 0
+    while(x) {
+        res = res * 10 + x % 10
+        if (res > Math.pow(2, 31) - 1 || res < Math.pow(-2, 31)) return 0
+        x = x / 10 | 0
+    }
+    return res
+}
+
+/**
+ * 二叉搜素树：Binary Search Tree）简称 BST
+ * 应该满足 左孩子 <= 根结点 <= 右孩子 这样的大小关系
+ * 1、是一棵空树
+ * 2、是一棵由根结点、左子树、右子树组成的树，同时左子树和右子树都是二叉搜索树，且左子树上所有结点的数据域都小于等于根结点的数据域，右子树上所有结点的数据域都大于等于根结点的数据域
+ */
+class TreeNode {
+    val
+    left
+    rigth
+    constructor(val) {
+        this.val = val
+        this.left = null
+        this.rigth = null
+    }
+}
+
+/**
+ * 是否有效二叉搜索树
+ * https://leetcode-cn.com/problems/validate-binary-search-tree/
+ * @param {*} root
+ * @returns
+ */
+const isValidBST = root => {
+    function dfs(root, min, max) {
+        if (!root) return true
+        if (root.val <= min || root.val >= max) return false
+        // 若左孩子大于根结点值， 或者右孩子小于根结点值， 则不合法
+        return dfs(root.left, min, root.val) && dfs(root.right, root.val, max)
+    }
+    return dfs(root, -Infinity, Infinity)
+}
+
+/**
+ * 搜索二叉树-搜索指定值的节点
+ * https://leetcode-cn.com/problems/search-in-a-binary-search-tree/
+ * @param {*} root
+ * @param {*} n
+ * @returns
+ */
+const search = (root, n) => {
+    if (!root) return
+    if (root.val === n) {
+        return root
+    } else if (n < root.val) {
+        return search(root.left, n)
+    } else {
+        return search(root.right, n)
+    }
+}
+/**
+ * 插入新节点
+ * https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/
+ * @param {*} root
+ * @param {*} n
+ * @returns
+ */
+
+const insertInToBST = (root, n) => {
+    if (!root) {
+        const root = new TreeNode(n)
+        return root
+    }
+    if (n < root.val) {
+        // 小于当前值，往左边插入
+        root.left = insertInToBST(root.left, n)
+    } else {
+        // 大于当前值，往右插入
+        root.right = insertInToBST(root.right, n)
+    }
+    return root
+}
+/**
+ * 删除指定节点
+ * https://leetcode-cn.com/problems/delete-node-in-a-bst/
+ * 维持二叉搜索树的数据有序性
+ */
+const deleteNode = (root, n) => {
+     // 如果没找到目标结点，则直接返回
+    if (!root) return root
+     // 定位到目标结点，开始分情况处理删除动作
+    if (root.val === n) {
+        // 若是叶子结点，则不需要想太多，直接删除
+        if (!root.left && !root.right) {
+            root = null
+        } else if (root.left) {
+            // 寻找左子树里值最大的结点
+            const maxLeft = findMax(root.left)
+            // 用这个 maxLeft 覆盖掉需要删除的当前结点
+            root.val = maxLeft.val
+            // 覆盖动作会消耗掉原有的 maxLeft 结点
+            root.left = deleteNode(root.left, maxLeft.val)
+        } else {
+            const minRight = findMin(root.right)
+            root.val = minRight.val
+            root.right = deleteNode(root.right, minRight.val)
+        }
+    } else if (root.val > n) {
+        // 若当前结点的值比 n 大，则在左子树中继续寻找目标结点
+        root.left = deleteNode(root.left, n)
+    } else {
+        // 若当前结点的值比 n 小，则在右子树中继续寻找目标结点
+        root.right = deleteNode(root.right, n)
+    }
+
+    // 寻找左子树最大值
+    function findMax(root) {
+        while(root.right) {
+            root = root.right
+        }
+        return root
+    }
+    // 寻找右子树的最小值
+    function findMin(root) {
+        while(root.left) {
+            root = root.left
+        }
+        return root
+    }
+    return root
+}
+
+/**
+ * 将排序数组转化为二叉搜索树
+ * https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/
+ * @param {*} nums
+ */
+const sorteArrayToBST = nums => {
+    if (!nums.length) return null
+    const buildBST = (start, end) => {
+        if (start > end) return null
+        const mid = Math.floor((start + end) / 2)
+        const cur = new TreeNode(nums[mid])
+        cur.left = buildBST(start, mid - 1)
+        cur.rigth = buildBST(mid + 1, end)
+    }
+    return buildBST(0, nums.length - 1)
+}
+
+
+/**
+ * 平衡二叉树： (又称 AVL Tree）指的是任意结点的左右子树高度差绝对值都不大于1的二叉搜索树。
+ *
+ */
