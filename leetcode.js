@@ -992,11 +992,11 @@ const reverseInteger = x => {
 class TreeNode {
     val
     left
-    rigth
+    right
     constructor(val) {
         this.val = val
         this.left = null
-        this.rigth = null
+        this.right = null
     }
 }
 
@@ -1117,7 +1117,7 @@ const sorteArrayToBST = nums => {
         const mid = Math.floor((start + end) / 2)
         const cur = new TreeNode(nums[mid])
         cur.left = buildBST(start, mid - 1)
-        cur.rigth = buildBST(mid + 1, end)
+        cur.right = buildBST(mid + 1, end)
     }
     return buildBST(0, nums.length - 1)
 }
@@ -1127,3 +1127,69 @@ const sorteArrayToBST = nums => {
  * 平衡二叉树： (又称 AVL Tree）指的是任意结点的左右子树高度差绝对值都不大于1的二叉搜索树。
  *
  */
+
+/**
+ * 是否是平衡二叉树
+ * https://leetcode-cn.com/problems/balanced-binary-tree/
+ */
+const isValidAVL = root => {
+    let flag = true
+    function dfs(root) {
+        if (!root || !flag) return 0
+        // 左子树高度
+        const left = dfs(root.left)
+        // 右子树高度
+        const right = dfs(root.right)
+        // 如果左右子树的高度差绝对值大于1，那么不是平衡二叉树
+        if (Math.abs(left - right) > 1) {
+            flag = false
+            return 0
+        }
+         // 返回当前子树的高度
+        return Math.max(left, right) + 1
+    }
+    dfs(root)
+    return flag
+}
+
+/**
+ * 将二叉搜索树平衡
+ * https://leetcode-cn.com/problems/balance-a-binary-search-tree/
+ * 先中序遍历得出有序数组，再执行 sorteArrayToBST
+ */
+
+ const balanceBST = function(root) {
+    // 初始化中序遍历序列数组
+    const nums = []
+    // 定义中序遍历二叉树，得到有序数组
+    function inorder(root) {
+        if(!root) {
+            return
+        }
+        inorder(root.left)
+        nums.push(root.val)
+        inorder(root.right)
+    }
+
+    // 这坨代码的逻辑和上一节最后一题的代码一模一样
+    function buildAVL(low, high) {
+        // 若 low > high，则越界，说明当前索引范围对应的子树已经构建完毕
+        if(low > high) {
+            return null
+        }
+        // 取数组的中间值作为根结点值
+        const mid = Math.floor((low + high) / 2)
+        // 创造当前树的根结点
+        const cur = new TreeNode(nums[mid])
+        // 构建左子树
+        cur.left = buildAVL(low, mid - 1)
+        // 构建右子树
+        cur.right = buildAVL(mid + 1, high)
+        // 返回当前树的根结点
+        return cur
+    }
+    // 调用中序遍历方法，求出 nums
+    inorder(root)
+    // 基于 nums，构造平衡二叉树
+    return buildAVL(0, nums.length-1)
+};
