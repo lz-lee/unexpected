@@ -179,7 +179,7 @@ const mergeArr = (nums1, m, nums2, n) => {
  * 两数之和的索引
  * 空间换时间
  */
-const towSum = function(arr, target) {
+const twoSum = function(arr, target) {
     const map = {}
     for (let i = 0; i < arr.length; i++) {
         if (map[target - arr[i]] !== undefined) {
@@ -1193,3 +1193,30 @@ const isValidAVL = root => {
     // 基于 nums，构造平衡二叉树
     return buildAVL(0, nums.length-1)
 };
+
+/**
+ * 字符串大数相加
+ * https://leetcode-cn.com/problems/add-strings/
+ */
+
+const addString = (a, b) => {
+    // 末位开始相加
+    let i = a.length - 1,
+        j = b.length - 1,
+        // 进位累加参数
+        add = 0,
+        // 每一位相加的结果
+        res = []
+    while (i >=0 || j >= 0 || add !== 0) {
+        // 变为数字才能相加
+        let x = i >= 0 ? -(-a.charAt(i)) : 0
+        let y = j >= 0 ? -(-b.charAt(j)) : 0
+        let cur = x + y + add
+        // 从个位 push的
+        res.push(cur % 10)
+        add = cur / 10 | 0
+        i--
+        j--
+    }
+    return res.reverse().join('')
+}

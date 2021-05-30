@@ -53,13 +53,17 @@ export function prefixStyle(style) {
  * @param {Array} arr
  */
 export function shuffle(arr) {
-  let _arr = arr.slice()
-  for (let i = 0; i < _arr.length; i++) {
-    let j = getRandomIndex(0, i)
-    let t = _arr[i]
-    _arr[i] = _arr[j]
-    _arr[j] = t
+  let res = arr.slice()
+  for (let i = 0; i < res.length; i++) {
+    var j = getRandomIndex(i, res.length - 1)
+    // let j = Math.random() * res.length | 0
+    [res[i], res[j]] = [res[j],res[i]]
   }
+  return res
+}
+
+function getRandomIndex(min, max) {
+  return (Math.random() * (max - min + 1) + min) | 0
 }
 
 /**
@@ -232,9 +236,4 @@ getJSONP.count = 0
 
 function padLeftZero(str) {
 	return ('00' + str).slice(str.length)
-}
-
-
-function getRandomIndex(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min)
 }
