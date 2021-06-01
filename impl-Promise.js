@@ -288,7 +288,8 @@ Promise.resolve = function (val) {
     if (val instanceof Promise) {
         return val;
     }
-    return (promsie = new Promise((resolve, reject) => {
+    let promise
+    return (promise = new Promise((resolve, reject) => {
         resolvePromise(promise, val, resolve, reject);
     }));
 };

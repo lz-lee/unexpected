@@ -43,7 +43,7 @@ function asyncToGenerator(fn) {
 }
 // Promise
 
-function myPromise(executor) {
+function MPromise(executor) {
 
     try {
         executor(resolve, reject);
@@ -86,7 +86,7 @@ function myPromise(executor) {
     }
 }
 
-myPromise.prototype.then = function(_resolve, _reject) {
+MPromise.prototype.then = function(_resolve, _reject) {
     const _this = this;
     let promise;
 
@@ -162,7 +162,7 @@ function resolvePromise(promise, x, resolve, reject) {
         return reject(new Error('promise 循环引用'));
     }
 
-    if (x instanceof Promise) {
+    if (x instanceof MPromise) {
         if (x.status === 'pending') {
             x.then((val) => {
                 resolvePromise(promise, val, resolve, reject);
@@ -198,16 +198,16 @@ function resolvePromise(promise, x, resolve, reject) {
     }
 }
 
-myPromise.prototype.catch = function(reject) {
+MPromise.prototype.catch = function(reject) {
     return this.then(null, reject);
 }
 
-myPromise.all = function(promises) {
-    return new myPromise((resolve, reject) => {
+MPromise.all = function(promises) {
+    return new MPromise((resolve, reject) => {
         const result = [];
         const count = 0;
         for (const [i, promise] of promises) {
-            myPromise.resolve(promise).then(res => {
+            MPromise.resolve(promise).then(res => {
                 count += 1;
                 result[i] = res;
                 if (count === promises.length) {
@@ -216,4 +216,13 @@ myPromise.all = function(promises) {
              }, err => reject(err));
         }
     });
+}
+MPromise.resolve = function(val) {
+    if (val instanceof MPromise) {
+        return val
+    }
+    let promise
+    return (promise = new MPromise((resolve, reject) => {
+        resolvePromise(promise, val, resolve, reject)
+    }))
 }

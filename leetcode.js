@@ -74,6 +74,7 @@ function maxSubArr(arr) {
 
 /**
  * 300.最长递增子序列的长度
+ * 动态规划
  * @param {*} root
  * dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度。
  * dp[i] 初始值为 1，因为以 nums[i] 结尾的最长递增子序列起码要包含它自己。
@@ -317,6 +318,27 @@ class ListNode {
         this.next = null
     }
 }
+/**
+ * 相交链表，返回相交的节点
+ * https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
+ * @param {*} list1
+ * @param {*} list2
+ * @returns
+ */
+const getIntersectionNode = (list1, list2) => {
+    if (!list1 || !list2) return null
+    let cur1 = list1, cur2 = list2
+    // 让两个链表都走相同长度的路径，那么如果有相交处，则节点相同
+    // A、B 都走 A + B 长度的路线
+    while(cur1 !== cur2) {
+        // A 走完 A 的路线再去走 B
+        cur1 = !cur1 ? list2 : cur1.next
+        // B 走完 B 的路线再去走 A
+        cur2 = !cur2 ? list1 : cur2.next
+    }
+    return cur1
+}
+
 const mergeTwoList = (list1, list2) => {
     // 定义头节点，确保链表可以被访问到
     let head = new ListNode()
@@ -338,6 +360,21 @@ const mergeTwoList = (list1, list2) => {
     cur.next = list1 !== null ? list1 : list2
     // 返回起始结点
     return head.next
+    // 递归
+//     if (l2 === null) {
+//         return l1
+//     }
+//     if (l1 === null) {
+//         return l2
+//     }
+//     if (l1.val < l2.val) {
+//         // 谁先小，拿小的下一个再去对比
+//         l1.next = mergeTwoList(l1.next, l2);
+//         return l1;
+//     } else {
+//         l2.next = mergeTwoList(l1, l2.next);
+//         return l2
+//     }
 }
 /**
  * 链表节点删除
@@ -947,6 +984,7 @@ const swapListNode = head => {
 }
 
 /**
+ * 动态规划
  * 不同路径
  * https://leetcode-cn.com/problems/unique-paths/
  */
@@ -960,11 +998,38 @@ const uniquePaths = function(m, n) {
     }
     for (let i = 1;i < m; i++) {
         for (let j = 1; j < n; j++) {
+            // 动态转移方程
             f[i][j] = f[i-1][j] + f[i][j-1]
         }
     }
     return f[m-1][n-1]
 };
+
+/**
+ * 动态规划
+ * 最小路径和
+ * https://leetcode-cn.com/problems/minimum-path-sum/
+ * @param {grid}
+ * @returns
+ */
+
+const minPathSum = function(grid) {
+    let m = grid.length
+    let n = grid[0].length
+    const dp = new Array(m).fill(0).map(() => new Array(n).fill(0))
+    for (let i = 1; i < m; i++) {
+        dp[i][0] = dp[i - 1][0] + grid[i][0]
+    }
+    for (let j = 1; j < m; j++) {
+        dp[0][j] = dp[0][j - 1] + grid[0][j]
+    }
+    for (let i = 1; i < m; i++) {
+        for (let j = 1; j < n; j++) {
+            dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
+        }
+    }
+    return dp[m - 1][n - 1]
+}
 
 /**
  * 整数反转
