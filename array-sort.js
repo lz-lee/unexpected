@@ -177,25 +177,3 @@ function mergeSort(arr) {
     const right = arr.slice(mid);
     return merge(mergeSort(left), mergeSort(right))
 }
-
-// 二分查找
-/**
-  核心逻辑：折半思想， 也是双指针思想
-  如果 val 比中间数小，则改 max 为 mid - 1
-  如果 val 比中间数大，则改 min 为 mid + 1
-*/
-function binarySearch(arr, val) {
-    let min = 0;
-    let max = arr.length - 1;
-    while (min <= max) {
-      let mid = Math.floor((max + min) / 2);
-      if (arr[mid] === val) {
-        return mid;
-      } else if (val < arr[mid]) {
-        max = mid - 1;
-      } else {
-        min = mid + 1;
-      }
-    }
-    return 'not found';
-  }

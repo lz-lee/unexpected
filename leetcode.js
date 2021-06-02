@@ -51,6 +51,7 @@ function removeDuplicates(arr) {
 
 /**
  * 53.最大子序和
+ * https://leetcode-cn.com/problems/maximum-subarray/
  * 动态规划：其思想是重新对变量赋值，重复利用变量，一般会要声明多个变量。状态转移方程
  * 在这里，sum 如果小于 0 则舍弃，将下一个 i 赋值给 sum；
  * sum 如果大于 0 则继续累加
@@ -603,7 +604,7 @@ const permute = nums => {
                 // 标识已访问过
                 visit[i] = true
                 cur.push(i)
-                // 基于这个排列继续往下一个坑走去
+                // 基于这个排列坑位继续往下一个坑走去
                 dfs(n+1)
                 // 一次排列的回归，还原
                 visit[i] = false
@@ -685,6 +686,7 @@ const combine = (n, k) => {
 
 /**
  * 二叉树层序遍历 BFS + 队列
+ * https://leetcode-cn.com/problems/binary-tree-level-order-traversal/
  * 给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）
  */
 
@@ -694,8 +696,9 @@ const levelOrder = root => {
     if (root) {
         queue.push(root)
         while (queue.length) {
+            // level 用来存储当前层的结点
             let level = []
-            // 缓存当前层级的长度
+            // 缓存当前层级的长度，这一步很关键，因为队列长度后面会发生改变
             let len = queue.length
             for (let i = 0; i < len; i++) {
                 let top = queue.shift()
@@ -1285,3 +1288,39 @@ const addString = (a, b) => {
     }
     return res.reverse().join('')
 }
+
+/**
+ * 2 的幂
+ * https://leetcode-cn.com/problems/power-of-two/
+ * @param {number} n
+ * @return {boolean}
+ */
+ var isPowerOfTwo = function(n) {
+    return n > 0 && (n & (n - 1)) === 0
+};
+// 5 & 4 0b101 & 0b100 => 1
+// 4 & 3 0b100 & 0b011 => 0
+
+
+// 二分查找
+/**
+ * https://leetcode-cn.com/problems/binary-search/
+  核心逻辑：折半思想， 也是双指针思想
+  如果 val 比中间数小，则改 max 为 mid - 1
+  如果 val 比中间数大，则改 min 为 mid + 1
+*/
+function binarySearch(arr, val) {
+    let min = 0;
+    let max = arr.length - 1;
+    while (min <= max) {
+      let mid = Math.floor((max + min) / 2);
+      if (arr[mid] === val) {
+        return mid;
+      } else if (val < arr[mid]) {
+        max = mid - 1;
+      } else {
+        min = mid + 1;
+      }
+    }
+    return 'not found';
+  }
