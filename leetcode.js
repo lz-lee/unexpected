@@ -303,13 +303,7 @@ const validPalindrome = str => {
     return false
 }
 
-/**
- * 链表合并
- * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有结点组成的
- * 链表的插入/删除效率较高，而访问效率较低； 链表的删除直接将 cur.next 指向 next.next 就行
- * 数组的访问效率较高，而插入效率较低。
- */
-
+// 链表
 class ListNode {
     val;
     next;
@@ -319,6 +313,52 @@ class ListNode {
         this.next = null
     }
 }
+
+/**
+ * 链表合并
+ * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有结点组成的
+ * 链表的插入/删除效率较高，而访问效率较低； 链表的删除直接将 cur.next 指向 next.next 就行
+ * 数组的访问效率较高，而插入效率较低。
+ */
+
+ const mergeTwoList = (list1, list2) => {
+    // 定义头节点，确保链表可以被访问到
+    let head = new ListNode('')
+    // 定义那根“针”
+    let cur = head
+    while (list1 && list2) {
+        // 比较两个链表节点的值，谁的值小，那么先串谁，
+        if (list1.val <= list2.val) {
+            cur.next = list1
+            list1 = list1.next
+        } else {
+            cur.next = list2
+            list2 = list2.next
+        }
+         // “针”在串起一个结点后，也会往前一步
+        cur = cur.next
+    }
+    // 处理链表不等长的情况
+    cur.next = list1 || list2
+    // 返回起始结点
+    return head.next
+    // 递归
+//     if (l2 === null) {
+//         return l1
+//     }
+//     if (l1 === null) {
+//         return l2
+//     }
+//     if (l1.val < l2.val) {
+//         // 谁先小，拿小的下一个再去对比
+//         l1.next = mergeTwoList(l1.next, l2);
+//         return l1;
+//     } else {
+//         l2.next = mergeTwoList(l1, l2.next);
+//         return l2
+//     }
+}
+
 /**
  * 相交链表，返回相交的节点
  * https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
@@ -340,43 +380,6 @@ const getIntersectionNode = (list1, list2) => {
     return cur1
 }
 
-const mergeTwoList = (list1, list2) => {
-    // 定义头节点，确保链表可以被访问到
-    let head = new ListNode()
-    // 定义那根“针”
-    let cur = head
-    while (list1 && list2) {
-        // 比较两个链表节点的值，谁的值小，那么先串谁，
-        if (list1.val <= list2.val) {
-            cur.next = list1
-            list1 = list1.next
-        } else {
-            cur.next = list2
-            list2 = list2.next
-        }
-         // “针”在串起一个结点后，也会往前一步
-        cur = cur.next
-    }
-    // 处理链表不等长的情况
-    cur.next = list1 !== null ? list1 : list2
-    // 返回起始结点
-    return head.next
-    // 递归
-//     if (l2 === null) {
-//         return l1
-//     }
-//     if (l1 === null) {
-//         return l2
-//     }
-//     if (l1.val < l2.val) {
-//         // 谁先小，拿小的下一个再去对比
-//         l1.next = mergeTwoList(l1.next, l2);
-//         return l1;
-//     } else {
-//         l2.next = mergeTwoList(l1, l2.next);
-//         return l2
-//     }
-}
 /**
  * 链表节点删除
  * 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
@@ -1323,4 +1326,44 @@ function binarySearch(arr, val) {
       }
     }
     return 'not found';
-  }
+}
+
+/**
+ * 动态规划
+ * 卖股票最佳时机
+ * https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/
+ * @param {number[]} prices
+ * @return {number}
+ */
+
+const maxProfit = nums => {
+    let min = nums[0]
+    let max = 0
+    for (let i of nums) {
+        // 先求最小值
+        min = Math.min(min, i)
+        // 再求差值的最大值
+        max = Math.max(max, i - min)
+    }
+    return max
+}
+
+/**
+ * 版本对比
+ * https://leetcode-cn.com/problems/compare-version-numbers/
+ */
+
+const compareVersions = (v1, v2) => {
+    let nums1 = v1.split('.')
+    let nums2 = v2.split('.')
+    let len = Math.max(nums1.length, nums2.length)
+    for (let i = 0; i < len; i++) {
+        // 不足的就补 0
+        let a = Number(nums1[i] || 0)
+        let b = Number(nums2[i] || 0)
+        if (a - b !== 0) {
+            return a - b > 0 ? 1 : - 1
+        }
+    }
+    return 0
+}
