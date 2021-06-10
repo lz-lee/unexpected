@@ -16,7 +16,8 @@
 | 题目 | 题解 |
 | --- | --- |
 |[有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)|[有效的括号](#有效的括号)|
-
+|[每日温度](https://leetcode-cn.com/problems/daily-temperatures/)|[每日温度](#每日温度)|
+|[]()|[去除重复字符](#去除重复字符)|
 #### 有效的括号
 ```js
 const isValid = str => {
@@ -43,6 +44,48 @@ const isValid = str => {
 }
 ```
 
+#### 每日温度
+```js
+/**
+ * 思路：维护一个存储下标的单调栈，从栈底到栈顶的下标对应的温度列表中的温度依次递减。如果一个下标在单调栈里，则表示尚未找到下一次温度更高的下标
+ *
+ * 示例：给定一个列表 temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。
+ */
+
+const getTemperatures = arr => {
+  const len = arr.length
+  const stack = []
+  const res = new Array(len).fill(0)
+  for (let i = 0; i < len; i++) {
+    // 如果栈不为空，且存在当前温度值大于上一个温度值
+    while (stack.length && arr[i] > arr[stack[stack.length - 1]]) {
+      // 将栈顶温度值对应的索引出栈
+      const top = stack.pop()
+        // 计算 当前栈顶温度值与第一个高于它的温度值 的索引差值, 即是需要等的天数
+      res[top] = i - top
+    }
+    // 栈里存的是温度对应的 index
+    stack.push(i)
+  }
+  return res
+}
+```
+
+#### 去除重复字符
+```js
+/**
+ * 单调栈
+ */
+const removeDuplicateStr = str => {
+  const stack = []
+  for (let i of stack) {
+    if (`${stack[stack.length - 1]}` !== i) {
+      stack.push(i)
+    }
+  }
+  return stack.join('')
+}
+```
 ---
 
 ## 双指针

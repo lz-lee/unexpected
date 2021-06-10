@@ -163,28 +163,7 @@ const removeDuplicateStr = str => {
 
 // console.log(getStr('aaabbccc'))
 
-/**
- * 每日温度问题
- * 根据每日气温列表，请重新生成一个列表对应位置的输出是需要等几天温度才会升高超过该日。如果之后都不会升高，请在该位置用 0 来代替。
- * 示例：给定一个列表 temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。
- */
 
-const getTemperatures = arr => {
-    const len = arr.length
-    const stack = []
-    const res = new Array(len).fill(0)
-    for (let i = 0; i < len; i++) {
-        // 如果栈不为空，且存在当前温度值大于上一个温度值
-        while (stack.length && arr[i] > arr[stack[stack.length - 1]]) {
-            // 将栈顶温度值对应的索引出栈
-            const top = stack.pop()
-            // 计算 当前栈顶温度值与第一个高于它的温度值 的索引差值, 即是需要等的天数
-            res[top] = i - top
-        }
-        // 栈里存的是温度对应的 index
-        stack.push(i)
-    }
-}
 /**
  * 滑动窗口最大值
  */
