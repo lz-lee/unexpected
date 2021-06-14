@@ -2,22 +2,24 @@
 # leetcode
 | 分类 |
 |--|
-|[栈、队列](#栈、队列)|
+|[栈-队列](#栈-队列)|
 |[双指针](#双指针)|
 |[递归](#递归)|
 |[二叉树遍历](#二叉树遍历)|
 |[动态规划](#动态规划)|
 |[链表](#链表)|
-|[数字、数学题](#数字、数学题)|
+|[数字-数学题](#数字-数学题)|
 
 
 ---
-## 栈、队列
+## 栈-队列
 | 题目 | 题解 |
 | --- | --- |
 |[有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)|[有效的括号](#有效的括号)|
 |[每日温度](https://leetcode-cn.com/problems/daily-temperatures/)|[每日温度](#每日温度)|
 |[]()|[去除重复字符](#去除重复字符)|
+|[无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)|[无重复字符的最长子串](#无重复字符的最长子串)|
+
 #### 有效的括号
 ```js
 const isValid = str => {
@@ -86,6 +88,24 @@ const removeDuplicateStr = str => {
   return stack.join('')
 }
 ```
+#### 无重复字符的最长子串
+```js
+const lengthOfLongestSubstring = str => {
+  const stack = []
+  let max = 0
+  for (let i of str) {
+    let index = stack.index(i)
+    if (index !== -1) {
+      // 出现过，那么需要删除 i 及 i 之前的元素，也就是从第 1 个元素到 i 这个元素
+      stack.splice(0, index + 1)
+    }
+    stack.push(i)
+    max = Math.max(max, stack.length)
+  }
+  return max
+}
+```
+
 ---
 
 ## 双指针
@@ -96,6 +116,8 @@ const removeDuplicateStr = str => {
 |[合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)|[合并两个有序数组](#合并两个有序数组)|
 |[二分查找](https://leetcode-cn.com/problems/binary-search/)|[二分查找](#二分查找)|
 |[双指针-删除链表的倒数第N个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)|[双指针-删除链表的倒数第N个结点](#双指针-删除链表的倒数第N个结点)|
+|[滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)|[滑动窗口最大值](#滑动窗口最大值)|
+|[长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)|[长度最小的子数组](#长度最小的子数组)|
 
 #### 删除有序数组中的重复项
 ```js
@@ -226,6 +248,61 @@ const removeNthFromEnd = (head, n) => {
 }
 ```
 
+#### 滑动窗口最大值
+```js
+
+const maxSlidingWindow = (nums, k) => {
+  let start = 0
+  let end = k - 1
+  let res = []
+  const getMax = (arr, s, e) => {
+    if (!arr || !arr.length) return
+    let max = arr[s]
+    for (let i = s; i <= e; i++) {
+      if (arr[i] > max) {
+        max = arr[i]
+      }
+    }
+    return max
+  }
+
+  while (end < nums.length) {
+    const max = getMax(nums, start, end)
+    res.push(max)
+    start++
+    end++
+  }
+  return res
+}
+```
+
+#### 长度最小的子数组
+```js
+/**
+ * 双指针
+ * 每一轮迭代，将 nums[end] 加到 sum，如果 sum≥s，则更新子数组的最小长度（此时子数组的长度是 end−start+1），然后将 nums[start] 从 sum 中减去并将 start 右移，直到  sum < s
+
+ */
+const minSubArrayLen = (target, nums) => {
+  let len = nums.length
+  if (len === 0) return 0
+  let sum = 0
+  let start = 0
+  let end = 0
+  let res = Infinity
+  while (end < len) {
+    sum += nums[end]
+    while (sum >= target) {
+      res = Math.min(res, end - start + 1)
+      sum -= nums[start]
+      start++
+    }
+    end++
+  }
+  return res === Infinity ? 0 : res
+};
+```
+
 ---
 
 ## 递归
@@ -284,7 +361,8 @@ const findSubSequences = nums => {
 |[二叉树层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)|[二叉树层序遍历](#二叉树层序遍历)|
 |[翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)|[翻转二叉树](#翻转二叉树)|
 |[二叉树所有路径和](https://leetcode-cn.com/problems/binary-tree-paths/)|[二叉树所有路径和](#二叉树所有路径和)|
-|[]()|[二叉树遍历](#二叉树遍历)|
+|[路径总和](https://leetcode-cn.com/problems/path-sum/)|[路径总和](#路径总和)|
+|[]()|[二叉树遍历合集](#二叉树遍历合集)|
 
 ```js
 function TreeNode(val) {
@@ -388,8 +466,26 @@ const binaryTreePaths = root => {
   return res
 }
 ```
+#### 路径总和
+```js
 
-#### 二叉树遍历
+/**
+ * @param {TreeNode} root
+ * @param {number} targetSum
+ * @return {boolean}
+ */
+const hasPathSum = function(root, targetSum) {
+  if (!root) return false
+  if (!root.left && !root.right) {
+    // 判断条件： 叶子节点是否与最后的值相同
+    return root.val === targetSum
+  }
+  return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val)
+}
+
+```
+
+#### 二叉树遍历合集
 ```js
 // 1、递归--深度优先
 const preorderTraversal = root => {
@@ -499,6 +595,7 @@ const maxSubArray = nums => {
     } else {
       sum = i
     }
+    // sum = Math.max(sum + i, i)
     max = Math.max(max, sum)
   }
   return max
@@ -947,10 +1044,35 @@ const detectCycle = function(head) {
 ```
 ---
 
-## 数字、数学题
+## 数字-数学题
 | 题目 | 题解 |
 | --- | --- |
-|[]()|[]()|
+|[字符串大数相加](https://leetcode-cn.com/problems/add-strings/)|[字符串大数相加](#字符串大数相加)|
 |[]()|[]()|
 |[]()|[]()|
 
+#### 字符串大数相加
+```js
+const addString = (a, b) => {
+  // 末位开始相加
+  let i = a.length - 1,
+    j = b.length - 1,
+    // 进位累加参数
+    add = 0,
+    // 每一位相加的结果
+    res = []
+  while (i >= 0 || j >= 0 || add !== 0) {
+    // 变为数字才能相加
+    let x = i >= 0 ? -(-a.charAt(i)) : 0
+    let y = j >= 0 ? -(-b.charAt(j)) : 0
+    let cur = x + y + add
+    // 先求 余数，并从个位 push的
+    res.push(cur % 10)
+    // 再求整数这次累加的整数部分，到下次加起来
+    add = cur / 10 | 0
+    i--
+    j--
+  }
+  return res.reverse().join('')
+}
+```

@@ -149,52 +149,6 @@ const getStr = str => {
     return stack.join('')
 }
 /**
- * 去除重复字符
-*/
-const removeDuplicateStr = str => {
-    const stack = []
-    for (const i of str) {
-        if (`${stack[stack.length - 1]}` !== i) {
-            stack.push(i)
-        }
-    }
-    return stack.join('')
-}
-
-// console.log(getStr('aaabbccc'))
-
-
-/**
- * 滑动窗口最大值
- */
-
- const maxSlidingWindow = function(nums, k) {
-    let start = 0
-    let end = k - 1
-    let res = []
-    const getMax = (arr, start, end) => {
-        if (!arr || !arr.length) return
-        let max = arr[start]
-        for (let i = start; i <= end; i++) {
-            if (arr[i] > max) {
-                max = arr[i]
-            }
-        }
-        return max
-    }
-    while (end < nums.length) {
-        const max = getMax(nums, start, end)
-        res.push(max)
-        start++
-        end++
-    }
-
-    return res
-};
-
-// console.log(maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3))
-
-/**
  * 递归-全排列
  * https://leetcode-cn.com/problems/permutations
  *
@@ -297,26 +251,6 @@ const combine = (n, k) => {
     // 从 1 开始
     dfs(1)
     return res
-}
-
-/**
- * 无重复字符最长子串
- * https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
- */
-
-const lengthOfLongestSubstring = str => {
-    const stack = []
-    let max = 0
-    for (let i of str) {
-        let index = stack.indexOf(i)
-        if (index !== -1) {
-            // 出现过，那么需要删除 i 及 i 之前的元素，也就是从第 1 个元素到 i 这个元素
-            stack.splice(0, index + 1)
-        }
-        stack.push(i)
-        max = Math.max(stack.length, max)
-    }
-    return max
 }
 
 
@@ -664,33 +598,6 @@ const isValidAVL = root => {
     // 基于 nums，构造平衡二叉树
     return buildAVL(0, nums.length-1)
 };
-
-/**
- * 字符串大数相加
- * https://leetcode-cn.com/problems/add-strings/
- */
-
-const addString = (a, b) => {
-    // 末位开始相加
-    let i = a.length - 1,
-        j = b.length - 1,
-        // 进位累加参数
-        add = 0,
-        // 每一位相加的结果
-        res = []
-    while (i >=0 || j >= 0 || add !== 0) {
-        // 变为数字才能相加
-        let x = i >= 0 ? -(-a.charAt(i)) : 0
-        let y = j >= 0 ? -(-b.charAt(j)) : 0
-        let cur = x + y + add
-        // 从个位 push的
-        res.push(cur % 10)
-        add = cur / 10 | 0
-        i--
-        j--
-    }
-    return res.reverse().join('')
-}
 
 /**
  * 2 的幂
