@@ -363,7 +363,10 @@ const findSubSequences = nums => {
 |[二叉树所有路径和](https://leetcode-cn.com/problems/binary-tree-paths/)|[二叉树所有路径和](#二叉树所有路径和)|
 |[路径总和](https://leetcode-cn.com/problems/path-sum/)|[路径总和](#路径总和)|
 |[]()|[二叉树遍历合集](#二叉树遍历合集)|
-
+|[是否有效二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)|[是否有效二叉搜索树](#是否有效二叉搜索树)|
+|[]()|[]()|
+|[]()|[]()|
+|[]()|[]()|
 ```js
 function TreeNode(val) {
   this.val = val
@@ -555,6 +558,28 @@ const preorderTraversal = (root) => {
         cur = cur.right
     }
     return res
+}
+```
+
+#### 是否有效二叉搜索树
+```js
+/**
+ * 二叉搜素树：Binary Search Tree）简称 BST
+ * 应该满足 左孩子 <= 根结点 <= 右孩子 这样的大小关系
+ * 1、是一棵空树
+ * 2、是一棵由根结点、左子树、右子树组成的树，同时左子树和右子树都是二叉搜索树，且左子树上所有结点的数据域都小于等于根结点的数据域，右子树上所有结点的数据域都大于等于根结点的数据域
+ */
+
+const isValidBST = root => {
+  function dfs(root, min, max) {
+    if (!root) return true
+    // 若左孩子大于根结点值 则不合法
+    if (root.val >= max) return false
+    // 或右孩子小于根结点值， 则不合法
+    if (root.val <= min) return false
+    return dfs(root.left, min, root.val) && dfs(root.right, root.val, max)
+  }
+  return dfs(root, -Infinity, Infinity)
 }
 ```
 
