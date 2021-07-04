@@ -13,14 +13,15 @@
 
 ---
 ## 栈-队列
-| 题目 | 题解 |
-| --- | --- |
-|[有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)|[有效的括号](#有效的括号)|
-|[每日温度](https://leetcode-cn.com/problems/daily-temperatures/)|[每日温度](#每日温度)|
-|[]()|[去除重复字符](#去除重复字符)|
-|[无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)|[无重复字符的最长子串](#无重复字符的最长子串)|
+| 题目 |
+| --- |
+|[有效的括号](#有效的括号)|
+|[每日温度](#每日温度)|
+|[去除重复字符](#去除重复字符)|
+|[去除连续出现的ac](#去除连续出现的ac)|
+|[无重复字符的最长子串](#无重复字符的最长子串)|
 
-#### 有效的括号
+#### [有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)
 ```js
 const isValid = str => {
   const stack = [];
@@ -46,7 +47,7 @@ const isValid = str => {
 }
 ```
 
-#### 每日温度
+#### [每日温度](https://leetcode-cn.com/problems/daily-temperatures/)
 ```js
 /**
  * 思路：维护一个存储下标的单调栈，从栈底到栈顶的下标对应的温度列表中的温度依次递减。如果一个下标在单调栈里，则表示尚未找到下一次温度更高的下标
@@ -80,7 +81,7 @@ const getTemperatures = arr => {
  */
 const removeDuplicateStr = str => {
   const stack = []
-  for (let i of stack) {
+  for (let i of str) {
     if (`${stack[stack.length - 1]}` !== i) {
       stack.push(i)
     }
@@ -88,7 +89,34 @@ const removeDuplicateStr = str => {
   return stack.join('')
 }
 ```
-#### 无重复字符的最长子串
+
+#### 去除连续出现的ac
+
+```js
+/**
+ * 栈
+ * 对输入的字符串，去除其中的字符'b'以及连续出现的'a'和'c'
+例如：
+'aacbd' -> 'ad'
+'aabcd' -> 'ad'
+'aaabbccc' -> ''
+不允许使用类似string.replace函数。要求时间、空间复杂度尽量优化
+ */
+const removeAC = str => {
+  const stack = []
+  for (let i of str) {
+    if (i !== 'b' && `${stack[stack.length - 1]}${i}` !== 'ac') {
+      stack.push(i)
+    }
+    if (`${stack[stack.length - 1]}${i}` === 'ac') {
+      stack.pop()
+    }
+  }
+  return stack.join('')
+}
+```
+
+#### [无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 ```js
 const lengthOfLongestSubstring = str => {
   const stack = []
@@ -109,17 +137,17 @@ const lengthOfLongestSubstring = str => {
 ---
 
 ## 双指针
-| 题目 | 题解 |
-| --- | --- |
-|[删除有序数组中的重复项](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)|[删除有序数组中的重复项](#删除有序数组中的重复项)|
-|[数组按奇偶排序](https://leetcode-cn.com/problems/sort-array-by-parity/)|[数组按奇偶排序](#数组按奇偶排序)|
-|[合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)|[合并两个有序数组](#合并两个有序数组)|
-|[二分查找](https://leetcode-cn.com/problems/binary-search/)|[二分查找](#二分查找)|
-|[双指针-删除链表的倒数第N个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)|[双指针-删除链表的倒数第N个结点](#双指针-删除链表的倒数第N个结点)|
-|[滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)|[滑动窗口最大值](#滑动窗口最大值)|
-|[长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)|[长度最小的子数组](#长度最小的子数组)|
+| 题目 |
+| --- |
+|[删除有序数组中的重复项](#删除有序数组中的重复项)|
+|[数组按奇偶排序](#数组按奇偶排序)|
+|[合并两个有序数组](#合并两个有序数组)|
+|[二分查找](#二分查找)|
+|[双指针-删除链表的倒数第N个结点](#双指针-删除链表的倒数第N个结点)|
+|[滑动窗口最大值](#滑动窗口最大值)|
+|[长度最小的子数组](#长度最小的子数组)|
 
-#### 删除有序数组中的重复项
+#### [删除有序数组中的重复项](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 ```js
 /**
  * 删除排序数组中的重复项，且返回新数组的长度
@@ -141,7 +169,7 @@ const  removeDuplicates = arr => {
 }
 ```
 
-#### 数组按奇偶排序
+#### [数组按奇偶排序](https://leetcode-cn.com/problems/sort-array-by-parity/)
 ```js
 /**
  * 双指针 -- 数组按奇偶排序
@@ -167,7 +195,7 @@ const sortArrayByParity = nums => {
 }
 ```
 
-#### 合并两个有序数组
+#### [合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
 ```js
 const mergeArr = (nums1, nums2) => {
   let m = nums1.length
@@ -198,7 +226,7 @@ const mergeArr = (nums1, nums2) => {
   return nums1
 }
 ```
-#### 二分查找
+#### [二分查找](https://leetcode-cn.com/problems/binary-search/)
 ```js
 /**
  * 给定一个 n 个元素有序的（升序）整型数组 nums 和一个目标值 target  ，写一个函数搜索 nums 中的 target，如果目标值存在返回下标，否则返回 -1。
@@ -223,7 +251,7 @@ const binarySearch = (arr, val) => {
 }
 ```
 
-#### 双指针-删除链表的倒数第N个结点
+#### [双指针-删除链表的倒数第N个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)|
 ```js
 /**
  * 双指针
@@ -248,7 +276,7 @@ const removeNthFromEnd = (head, n) => {
 }
 ```
 
-#### 滑动窗口最大值
+#### [滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
 ```js
 
 const maxSlidingWindow = (nums, k) => {
@@ -276,7 +304,7 @@ const maxSlidingWindow = (nums, k) => {
 }
 ```
 
-#### 长度最小的子数组
+#### [长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
 ```js
 /**
  * 双指针
@@ -307,11 +335,13 @@ const minSubArrayLen = (target, nums) => {
 
 ## 递归
 
-| 题目 | 题解 |
-| --- | --- |
-|[递增子序列](https://leetcode-cn.com/problems/increasing-subsequences/) |[递增子序列](#递增子序列)|
+| 题目 |
+| --- |
+|[递增子序列](#递增子序列)|
+|[子集](#子集)|
+|[岛屿数量](#岛屿数量)|
 
-#### 递增子序列
+#### [递增子序列](https://leetcode-cn.com/problems/increasing-subsequences/)
 ```js
 /**
  * 491.求递增子序列
@@ -349,21 +379,72 @@ const findSubSequences = nums => {
   return res
 }
 ```
+#### [子集](https://leetcode-cn.com/problems/subsets/)
+```js
+const subsets = nums => {
+  const len = nums.length
+  const res = []
+  const subset = []
+  function dfs(n) {
+    res.push(subset.slice())
+    //  没有显示的 return 是因为 for 语句会遍历所有的数字，当数字遍历完全时，也就意味着递归走到了尽头。
+    for (let i = n; i < len; i++) {
+      // 当前数字存在于组合中的情况，
+      subset.push(nums[i])
+      // 基于当前数字存在于组合中的情况，继续 dfs，找到与当前数字存在的所有组合
+      dfs(i+1)
+      // 当前数字不存在与组合中的情况
+      subset.pop()
+    }
+  }
+  dfs(0)
+  return res
+}
+```
 
+#### [岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
+```js
+const dfs = (grid, i, j) => {
+  // 递归终止条件
+  if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] === '0') {
+    return
+  }
+  // 遍历过的标记为 0
+  grid[i][j] = '0'
+  // 从当前节点向 上下左右 移动
+  dfs(grid， i + 1, j)
+  dfs(grid， i, j + 1)
+  dfs(grid， i - 1, j)
+  dfs(grid， i, j - 1)
+}
+const numIslands = grid => {
+  let count = 0
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[0].length; j++) {
+      // dfs 遇到 1 就加 1 并且将 1 周边所有的 1 都改成 0
+      if (grid[i][j] === '1') {
+        dfs(grid, i, j)
+        count++
+      }
+    }
+  }
+  return count
+}
+```
 
 ---
 
 ## 二叉树遍历
-| 题目 | 题解 |
-| --- | --- |
-| [二叉树最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/) | [二叉树最大深度](#二叉树最大深度) |
-| [二叉树最小深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/) | [二叉树最小深度](#二叉树最小深度) |
-|[二叉树层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)|[二叉树层序遍历](#二叉树层序遍历)|
-|[翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)|[翻转二叉树](#翻转二叉树)|
-|[二叉树所有路径和](https://leetcode-cn.com/problems/binary-tree-paths/)|[二叉树所有路径和](#二叉树所有路径和)|
-|[路径总和](https://leetcode-cn.com/problems/path-sum/)|[路径总和](#路径总和)|
+| 题目 |
+| --- |
+|[二叉树最大深度](#二叉树最大深度) |
+|  [二叉树最小深度](#二叉树最小深度) |
+|[二叉树层序遍历](#二叉树层序遍历)|
+|[翻转二叉树](#翻转二叉树)|
+|[二叉树所有路径和](#二叉树所有路径和)|
+|[路径总和](#路径总和)|
 |[]()|[二叉树遍历合集](#二叉树遍历合集)|
-|[是否有效二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)|[是否有效二叉搜索树](#是否有效二叉搜索树)|
+|[是否有效二叉搜索树](#是否有效二叉搜索树)|
 |[]()|[]()|
 |[]()|[]()|
 |[]()|[]()|
@@ -374,7 +455,7 @@ function TreeNode(val) {
   this.right = null
 }
 ```
-#### 二叉树最大深度
+#### [二叉树最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```js
 /**
@@ -387,7 +468,7 @@ const maxDepth = root => {
 }
 
 ```
-#### 二叉树最小深度
+#### [二叉树最小深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```js
 /**
@@ -401,7 +482,7 @@ const minDepth = root => {
 
 ```
 
-#### 二叉树层序遍历
+#### [二叉树层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 ```js
 /**
  * 二叉树层序遍历 BFS + 队列
@@ -434,7 +515,7 @@ const levelOrder = root => {
   return res
 }
 ```
-#### 翻转二叉树
+#### [翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
 ```js
 const invertTree = root => {
   if (!root) return root
@@ -446,7 +527,7 @@ const invertTree = root => {
 }
 ```
 
-#### 二叉树所有路径和
+#### [二叉树所有路径和](https://leetcode-cn.com/problems/binary-tree-paths/)
 ```js
 /**
  * 递归
@@ -469,7 +550,7 @@ const binaryTreePaths = root => {
   return res
 }
 ```
-#### 路径总和
+#### [路径总和](https://leetcode-cn.com/problems/path-sum/)
 ```js
 
 /**
@@ -510,6 +591,7 @@ const preorderTraversal = root => {
 }
 
 // 2、迭代 -- 栈 前序遍历
+// res =>  根 - 左 - 右
 const preorderTraversal = (root) => {
   if (!root) return []
   const stack = [root];
@@ -518,28 +600,26 @@ const preorderTraversal = (root) => {
   while (stack.length) {
     let item = stack.pop();
     result.push(item.val);
-    // 倒序 push，后 push 的先 pop，即实现前序遍历 L=>D=>R
     if (item.right) stack.push(item.right);
     if (item.left) stack.push(item.left);
   }
   return result;
 }
-// 3、迭代--后序遍历：栈
+// 3、迭代 -- 栈 后序遍历
 // res =>  左 - 右 - 根
-// 出 stack 顺序 => 根 - 右 - 左
 const preorderTraversal = (root) => {
   if (!root) return root
   const stack = [root]
   const res = []
   while (stack.length) {
     let cur = stack.pop()
-    res.unshift(cur.val)
+    res.unshift(cur.val) // 这里用 unshift 而不是 push
     if (cur.left) stack.push(cur.left)
     if (cur.right) stack.push(cur.right)
   }
   return res
 }
-// 4、迭代--中序遍历
+// 4、迭代 -- 栈 中序遍历
 // res => 左 - 中 - 右
 const preorderTraversal = (root) => {
     const stack = []
@@ -561,7 +641,7 @@ const preorderTraversal = (root) => {
 }
 ```
 
-#### 是否有效二叉搜索树
+#### [是否有效二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 ```js
 /**
  * 二叉搜素树：Binary Search Tree）简称 BST
@@ -591,19 +671,19 @@ const isValidBST = root => {
   *  2、不要求你给出每一种解法对应的具体路径
 * 思想：倒着分析问题 --> 得出状态转移方程
 
-| 题目 | 题解 |
-| --- | --- |
-| [最大子序和](https://leetcode-cn.com/problems/maximum-subarray/) | [最大子序和](#最大子序和) |
-| [最长递增子序列的长度](https://leetcode-cn.com/problems/longest-increasing-subsequence/) | [最长递增子序列的长度](#最长递增子序列的长度) |
-| [爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/) | [爬楼梯](#爬楼梯) |
-| [零钱兑换](https://leetcode-cn.com/problems/coin-change/) | [零钱兑换](#零钱兑换) |
-| [不同路径-i](https://leetcode-cn.com/problems/unique-paths/) | [不同路径-i](#不同路径-i) |
-| [最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/) | [最小路径和](#最小路径和) |
-| [卖股票最佳时机-i](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/) | [卖股票最佳时机-i](#卖股票最佳时机-i) |
-| [卖股票最佳时机-ii](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/) | [卖股票最佳时机-ii](#卖股票最佳时机-ii) |
+| 题目 |
+| --- |
+| [最大子序和](#最大子序和) |
+| [最长递增子序列的长度](#最长递增子序列的长度) |
+| [爬楼梯](#爬楼梯) |
+| [零钱兑换](#零钱兑换) |
+| [不同路径-i](#不同路径-i) |
+| [最小路径和](#最小路径和) |
+| [卖股票最佳时机-i](#卖股票最佳时机-i) |
+| [卖股票最佳时机-ii](#卖股票最佳时机-ii) |
 
 
-#### 最大子序和
+#### [最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 ```js
 /**
  * 在这里，sum 如果小于 0 则舍弃，将下一个 i 赋值给 sum；
@@ -627,7 +707,7 @@ const maxSubArray = nums => {
 }
 ```
 
-#### 最长递增子序列的长度
+#### [最长递增子序列的长度](https://leetcode-cn.com/problems/longest-increasing-subsequence/) |
 ```js
 /**
  *  dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度。
@@ -653,7 +733,7 @@ const lengthOfLIS = nums => {
 
 ```
 
-#### 爬楼梯
+#### [爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
 ```js
 const climpStep = n => {
   let f = []
@@ -685,7 +765,7 @@ const climbStepBetter1 = (n, n1 = 0, n2 = 1) => {
 
 ```
 
-#### 零钱兑换
+#### [零钱兑换](https://leetcode-cn.com/problems/coin-change/)
 ```js
 /**
  * 输入: coins = [1, 2, 5], amount = 11，输出 3
@@ -695,7 +775,7 @@ const climbStepBetter1 = (n, n1 = 0, n2 = 1) => {
  *
  */
 
-const coinChange = nums => {
+const coinChange = (nums, amount) => {
   // 用于保存每个目标总额对应的最小硬币个数
   const f = []
   // 提前定义已知情况
@@ -718,7 +798,7 @@ const coinChange = nums => {
 }
 ```
 
-#### 不同路径-i
+####  [不同路径-i](https://leetcode-cn.com/problems/unique-paths/)
 ```js
 /**
  * 一个机器人位于一个 m x n 网格的左上角,机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角, 问总共有多少条不同的路径？
@@ -745,7 +825,7 @@ const uniquePaths = (m, n) => {
 
 ```
 
-#### 最小路径和
+#### [最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
 ```js
 /**
  * 给定一个包含非负整数的 m x n 网格 grid ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
@@ -777,7 +857,7 @@ const minPathSum = function(grid) {
 }
 
 ```
-#### 卖股票最佳时机-i
+#### [卖股票最佳时机-i](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 ```js
 /**
  * @param {number[]} prices
@@ -797,7 +877,7 @@ const maxProfit = nums => {
 }
 ```
 
-#### 卖股票最佳时机-ii
+#### [卖股票最佳时机-ii](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/) |
 ```js
 /**
  * 贪心算法
@@ -819,15 +899,15 @@ var maxProfit = function(prices) {
 ## 链表
 | 题目 | 题解 |
 | --- | --- |
-|[有序链表合并](https://leetcode-cn.com/problems/merge-two-sorted-lists/)|[有序链表合并](#有序链表合并)|
-|[相交链表](https://leetcode-cn.com/problems/intersection-of-two-linked-lists/)|[相交链表](#相交链表)|
-|[删除排序链表中的重复元素i](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)|[删除排序链表中的重复元素i](#删除排序链表中的重复元素i)|
-|[删除排序链表中的重复元素ii](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii//)|[删除排序链表中的重复元素ii](#删除排序链表中的重复元素ii)|
-|[反转链表i](https://leetcode-cn.com/problems/reverse-linked-list/)|[反转链表i](#反转链表i)|
-|[反转链表ii](https://leetcode-cn.com/problems/reverse-linked-list/)|[反转链表ii](#反转链表ii)|
-|[删除链表的倒数第N个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)|[删除链表的倒数第N个结点](#删除链表的倒数第N个结点)|
-|[环形链表i](https://leetcode-cn.com/problems/linked-list-cycle/)|[环形链表i](#环形链表i)|
-|[环形链表ii](https://leetcode-cn.com/problems/linked-list-cycle-ii/)|[环形链表ii](#环形链表ii)|
+|[有序链表合并](#有序链表合并)|
+|[相交链表](#相交链表)|
+|[删除排序链表中的重复元素i](#删除排序链表中的重复元素i)|
+|[删除排序链表中的重复元素ii](#删除排序链表中的重复元素ii)|
+|[反转链表i](#反转链表i)|
+|[反转链表ii](#反转链表ii)|
+|[删除链表的倒数第N个结点](#删除链表的倒数第N个结点)|
+|[环形链表i](#环形链表i)|
+|[环形链表ii](#环形链表ii)|
 
 ```js
 class ListNode {
@@ -841,7 +921,7 @@ class ListNode {
 }
 ```
 
-#### 有序链表合并
+#### [有序链表合并](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 ```js
 const mergeTwoList = (l1, l2) => {
   let head = new ListNode()
@@ -876,7 +956,7 @@ const mergeTwoList = (l1, l2) => {
 //     }
 }
 ```
-#### 相交链表
+#### [相交链表](https://leetcode-cn.com/problems/intersection-of-two-linked-lists/)
 ```js
 /**
  * 相交链表，返回相交的节点
@@ -899,7 +979,7 @@ const getIntersectionNode = (l1, l2) => {
 }
 ```
 
-#### 删除排序链表中的重复元素i
+#### [删除排序链表中的重复元素i](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)
 ```js
 /**
  * 链表节点删除
@@ -919,7 +999,7 @@ const removeDuplicatesList = head => {
 }
 ```
 
-#### 删除排序链表中的重复元素ii
+#### [删除排序链表中的重复元素ii](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii//)
 ```js
 /**
  * 给定一个排序链表，删除所有含有重复数字的结点，只保留原始链表中 没有重复出现的数字。
@@ -958,7 +1038,7 @@ const deleteDuplicatesList = head => {
 }
 
 ```
-#### 反转链表i
+#### [反转链表i](https://leetcode-cn.com/problems/reverse-linked-list/)
 ```js
 const reverseList = head => {
   let prev = null
@@ -977,7 +1057,7 @@ const reverseList = head => {
 }
 
 ```
-#### 反转链表ii
+#### [反转链表ii](https://leetcode-cn.com/problems/reverse-linked-list/)
 
 ```js
 /**
@@ -1012,7 +1092,7 @@ const reverseBetween = (head, m, n) => {
 
 ```
 
-#### 删除链表的倒数第N个结点
+#### [删除链表的倒数第N个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
 ```js
 /**
  * 双指针
@@ -1036,7 +1116,7 @@ const removeNthFromEnd = (head, n) => {
   return dummy.next
 }
 ```
-#### 环形链表i
+#### [环形链表i](https://leetcode-cn.com/problems/linked-list-cycle/)
 ```js
 /**
  * 判断是否是环形链表
@@ -1052,7 +1132,7 @@ const hasCycle = head => {
 }
 ```
 
-#### 环形链表ii
+#### [环形链表ii](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 ```js
 /**
  * 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
@@ -1072,11 +1152,11 @@ const detectCycle = function(head) {
 ## 数字-数学题
 | 题目 | 题解 |
 | --- | --- |
-|[字符串大数相加](https://leetcode-cn.com/problems/add-strings/)|[字符串大数相加](#字符串大数相加)|
+|[字符串大数相加](#字符串大数相加)|
 |[]()|[]()|
 |[]()|[]()|
 
-#### 字符串大数相加
+#### [字符串大数相加](https://leetcode-cn.com/problems/add-strings/)
 ```js
 const addString = (a, b) => {
   // 末位开始相加

@@ -124,30 +124,6 @@ const validPalindrome = str => {
     return false
 }
 
-
-/**
- * 栈
- * 对输入的字符串，去除其中的字符'b'以及连续出现的'a'和'c'
-例如：
-'aacbd' -> 'ad'
-'aabcd' -> 'ad'
-'aaabbccc' -> ''
-不允许使用类似string.replace函数。要求时间、空间复杂度尽量优化
- */
-
-const getStr = str => {
-    const stack = []
-
-    for (const i of str) {
-        if (i !== 'b' && `${stack[stack.length - 1]}${i}` !== 'ac') {
-            stack.push(i)
-        }
-        if (`${stack[stack.length - 1]}${i}` === 'ac') {
-            stack.pop()
-        }
-    }
-    return stack.join('')
-}
 /**
  * 递归-全排列
  * https://leetcode-cn.com/problems/permutations
@@ -186,31 +162,6 @@ const permute = nums => {
     return res
 }
 
-/**
- * 递归-求子集(组合)
- * https://leetcode-cn.com/problems/subsets/
- */
-const subsets = nums => {
-    const len = nums.length
-    const res = []
-    const subset = []
-    function dfs(n) {
-        res.push(subset.slice())
-        //  没有显示的 return 是因为 for 语句会遍历所有的数字，当数字遍历完全时，也就意味着递归走到了尽头。
-        for (let i = n; i < len; i++) {
-            // 当前数字存在于组合中的情况，
-            subset.push(nums[i])
-            // 基于当前数字存在于组合中的情况，继续 dfs，找到与当前数字存在的所有组合
-            dfs(i+1)
-            // 当前数字不存在与组合中的情况
-            subset.pop()
-        }
-    }
-    dfs(0)
-    return res
-}
-
-console.log(subsets([1,2,3]))
 
 /**
  * 递归-限定组合
