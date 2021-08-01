@@ -49,21 +49,20 @@ export function prefixStyle(style) {
   return vendor + style.charAt(0).toUpperCase() + style.substring(1)
 }
 /**
- * 数组洗牌
+ * 数组洗牌 Knuth shuffle
  * @param {Array} arr
  */
 export function shuffle(arr) {
   let res = arr.slice()
-  for (let i = 0; i < res.length; i++) {
-    var j = getRandomIndex(i, res.length - 1)
-    // let j = Math.random() * res.length | 0
+  for (let i = res.length - 1; i >=0; --i) {
+    var j = getRandomIndex(i)
     [res[i], res[j]] = [res[j],res[i]]
   }
   return res
 }
 
-function getRandomIndex(min, max) {
-  return (Math.random() * (max - min + 1) + min) | 0
+function getRandomIndex(max) {
+  return (Math.random() * (max + 1)) | 0
 }
 
 /**
