@@ -15,8 +15,8 @@ function deepClone(obj, cache = new WeakMap()) {
     //     copy
     // });
     cache.set(obj, copy);
-    // ownKeys = Object.getOwnPropertyNames （包括不可枚举属性） (而 Object.keys 返回的是自身可枚举属性组成的数组，“可枚举”即“可遍历”) + Object.getOwnPropertySymbols
-    // for...in语句以任意顺序遍历一个对象的除Symbol以外的可枚举属性。
+    // ownKeys = Object.getOwnPropertyNames （包括不可枚举属性） (而 Object.keys 返回的是自身可枚举属性(除 Symbol 外)组成的数组，“可枚举”即“可遍历”) + Object.getOwnPropertySymbols
+    // for...in语句以任意顺序遍历一个对象的除 Symbol 以外的可枚举属性。
     Reflect.ownKeys(obj).forEach((key) => {
         copy[key] = deepClone(obj[key], cache);
     });
