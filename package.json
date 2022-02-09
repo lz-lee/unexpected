@@ -4,7 +4,7 @@
   "description": "",
   "main": "decorator.js",
   "scripts": {
-    "test": "jest"
+    "test": "node ./call-apply-bind.js"
   },
   "repository": {
     "type": "git",
