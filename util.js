@@ -93,7 +93,7 @@ export function throttle(func, delay) {
 
       if (now - last > delay) {
         func.apply(this, args)
-          last = now
+          last = Date.now()
       } else {
         console.log('时间差不到要求')
       }

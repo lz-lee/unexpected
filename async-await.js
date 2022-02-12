@@ -39,6 +39,15 @@ async function async2() {
  * Promise2
  * setTimeout
  */
+
+
+// 一个函数如果加上 async ，那么该函数就会返回一个 Promise， 因此 async2 是一个 resolve 状态的 Promise
+
+async function test() {
+    return "1"
+}
+console.log(test()) // -> Promise {<resolved>: "1"}
+
 // 经过 babel 转化的代码为
 
 let async1 = (function () {
