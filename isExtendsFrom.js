@@ -16,6 +16,11 @@ function findInPrototype(sub: any, matcher: (prototype: any) => boolean) {
   return false;
 }
 
+// 子类 继承父类原型上的属性, 保证 Child 的实例能访问父类原型上的属性
+//   subClass.prototype = Object.create(superClass && superClass.prototype, {
+//     constructor: { value: subClass, writable: true, configurable: true },
+// });
+
 function hasBaseClassWithName(sub: any, baseClassName: string): boolean {
   return findInPrototype(sub, p => (p.constructor && p.constructor.name) === baseClassName)
 }

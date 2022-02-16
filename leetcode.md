@@ -181,14 +181,10 @@ const  removeDuplicates = arr => {
 const sortArrayByParity = nums => {
   // return nums.sort((a, b) => a % 2 - b % 2)
   let slow = 0
-  let fast = 0
   for (let i = 0; i < nums.length; i++) {
     if (nums[i] % 2 === 0) {
-      [arr[slow], arr[fast]] = [arr[fast], arr[slow]]
+      [arr[slow], arr[i]] = [arr[i], arr[slow]]
       slow++
-      fast++
-    } else {
-      fast++
     }
   }
   return nums
@@ -686,8 +682,6 @@ const isValidBST = root => {
 #### [最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 ```js
 /**
- * 在这里，sum 如果小于 0 则舍弃，将下一个 i 赋值给 sum；
- * sum 如果大于 0 则继续累加
  * @param {nums: number[]} [-2,1,-3,4,-1,2,1,-5,4]
  * @return number
  */
@@ -695,12 +689,7 @@ const maxSubArray = nums => {
   let max = arr[0]
   let sum = 0
   for (let i of nums) {
-    if (sum > 0) {
-      sum = sum + i
-    } else {
-      sum = i
-    }
-    // sum = Math.max(sum + i, i)
+    sum = Math.max(sum + i, i)
     max = Math.max(max, sum)
   }
   return max
