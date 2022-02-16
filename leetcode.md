@@ -124,7 +124,7 @@ const lengthOfLongestSubstring = str => {
   for (let i of str) {
     let index = stack.index(i)
     if (index !== -1) {
-      // 出现过，那么需要删除 i 及 i 之前的元素，也就是从第 1 个元素到 i 这个元素
+      // 出现过，那么需要删除 i 及 i 之前的元素，也就是从第 1 个元素到 i 这个元素 (splice 删除的是 个数 )
       stack.splice(0, index + 1)
     }
     stack.push(i)
@@ -747,9 +747,10 @@ const climpStep = n => {
 }
 
 // 尾调用优化--斐波那契数列
-const climbStepBetter1 = (n, n1 = 0, n2 = 1) => {
-    if (n <= 1) return n2
-    return climbStepBetter1(n -1, n2, n1 + n2)
+const climbStepBetter1 = (n, n1 = 1, n2 = 2) => {
+    if (n ===1) return n1
+    if (n === 2) return n2
+    return climbStepBetter1(n - 1, n2, n1 + n2)
 }
 
 ```
