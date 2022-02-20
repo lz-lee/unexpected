@@ -557,3 +557,28 @@ const compareVersions = (v1, v2) => {
     }
     return 0
 }
+/**
+ * 56、区间合并 https://leetcode-cn.com/problems/merge-intervals/
+ * 贪心算法
+ */
+
+const merge = (nums) => {
+    nums = nums.sort((a,b) => a[0] - b[0])
+    let prev = nums[0]
+    let res = []
+    for (let i = 1;i < nums.length; i++) {
+        let cur = nums[i]
+        // 区间断了
+        if (cur[0] > prev[1]){
+            // push 之前合并过的的 prev
+            res.push(prev)
+            // 更新指针
+            prev = cur
+        } else {
+            // 没断找最大值
+            prev[1] = Math.max(prev[1], cur[1])
+        }
+    }
+    res.push(prev)
+    return res;
+}
