@@ -13,7 +13,7 @@ const setTimeout = (fn, delay, ...args) => {
   return timer
 }
 
-const setInterval = (fn, interval, ...args) => {
+const setInterval = (fn, interval) => {
   let start = performance.now()
   let timer
   // 该回调函数会被传入DOMHighResTimeStamp参数，
@@ -24,7 +24,7 @@ const setInterval = (fn, interval, ...args) => {
     if (timestamp - start >= interval) {
       // 重新赋值，间隔执行
       start = performance.now()
-      fn.apply(this, args)
+      fn.call(this, timer)
     }
   }
   timer = window.requestAnimationFrame(loop)
