@@ -124,85 +124,9 @@ const validPalindrome = str => {
     return false
 }
 
-/**
- * 递归-全排列
- * https://leetcode-cn.com/problems/permutations
- *
- */
-const permute = nums => {
-    const len = nums.length
-    // 用来记录当前的排列内容
-    const cur = []
-    const res = []
-    // 记录一次排列过程中访问过的数字，避免重复
-    const visit = {}
-    // 定义 dfs 函数，入参是坑位的索引（从 0 计数）
-    function dfs(n) {
-        // 递归边界,  遍历到了不存在的坑位（第 len+1 个），则触碰递归边界返回
-        if (n === len) {
-            // 此时前 len 个坑位已经填满，将对应的排列记录下来
-            res.push(cur.slice())
-            return
-        }
-        for (const i of nums) {
-            if (!visit[i]) {
-                // 标识已访问过
-                visit[i] = true
-                cur.push(i)
-                // 基于这个排列坑位继续往下一个坑走去
-                dfs(n+1)
-                // 一次排列的回归，还原
-                visit[i] = false
-                cur.pop()
-            }
-        }
-    }
-     // 从索引为 0 的坑位（也就是第一个坑位）开始 dfs
-    dfs(0)
-    return res
-}
 
 
-/**
- * 递归-限定组合
- * 给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
- * https://leetcode-cn.com/problems/combinations/
- * 示例: 输入: n = 4, k = 2
-    输出:
-    [
-    [2,4],
-    [3,4],
-    [2,3],
-    [1,2],
-    [1,3],
-    [1,4],
-    ]
- */
 
-const combine = (n, k) => {
-    const res = []
-    const subset = []
-
-    function dfs(index) {
-        // 递归式：普通组合问题，每到一个新的坑位处，我们都需要对组合结果数组进行更新；这道题中，当且仅当组合内数字个数为 k 个时，才会对组合结果数组进行更新。
-        // 递归边界：只要组合内数字个数达到了 k 个，就不再继续当前的路径往下遍历，而是直接返回。
-        if (subset.length === k) {
-            res.push(subset.slice())
-            return
-        }
-        for (let i = index; i <= n; i++) {
-            // 当前数字存在于组合中的情况，
-            subset.push(i)
-            // 基于当前数字存在于组合中的情况，继续 dfs，找到与当前数字存在的所有组合
-            dfs(i + 1)
-            // 当前数字不存在与组合中的情况
-            subset.pop()
-        }
-    }
-    // 从 1 开始
-    dfs(1)
-    return res
-}
 
 
 /**
