@@ -525,9 +525,9 @@ const combine = (n, k) => {
 |[路径总和](#路径总和)|
 |[二叉树遍历合集](#二叉树遍历合集)|
 |[是否有效二叉搜索树](#是否有效二叉搜索树)|
-|[]()|[]()|
-|[]()|[]()|
-|[]()|[]()|
+|[二叉树右视图](#二叉树右视图)|
+|[]()|
+|[]()|
 ```js
 function TreeNode(val) {
   this.val = val
@@ -742,6 +742,46 @@ const isValidBST = root => {
   return dfs(root, -Infinity, Infinity)
 }
 ```
+#### [二叉树右视图](https://leetcode-cn.com/problems/binary-tree-right-side-view/submissions/)
+```js
+//  BFS 在层序遍历的基础上取每一层的最后一个值
+var rightSideView = function(root) {
+  const res = [];
+  const queue = []
+  if (!root) return []
+  queue.push(root)
+
+  while (queue.length) {
+      let level = [];
+      let len = queue.length;
+      for (let i = 0; i < len; i++) {
+          let top = queue.shift();
+          level.push(top.val)
+          top.left && queue.push(top.left);
+          top.right && queue.push(top.right)
+      }
+      res.push(level[level.length -1])
+  }
+  return res;
+};
+// DFS
+
+var rightSideView = function(root) {
+  const res = [];
+  const dfs = (root, depth) => {
+      if (!root) return null;
+      if (depth === res.length) {
+          res.push(root.val)
+      }
+      depth++;
+      dfs(root.right, depth)
+      dfs(root.left, depth);
+  }
+  dfs(root, 0);
+  return res;
+};
+```
+
 
 ---
 
