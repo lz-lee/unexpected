@@ -1273,25 +1273,20 @@ const detectCycle = function(head) {
 #### [字符串大数相加](https://leetcode-cn.com/problems/add-strings/)
 ```js
 const addString = (a, b) => {
-  // 末位开始相加
-  let i = a.length - 1,
-    j = b.length - 1,
-    // 进位累加参数
-    add = 0,
-    // 每一位相加的结果
-    res = []
-  while (i >= 0 || j >= 0 || add !== 0) {
-    // 变为数字才能相加
-    let x = i >= 0 ? -(-a.charAt(i)) : 0
-    let y = j >= 0 ? -(-b.charAt(j)) : 0
-    let cur = x + y + add
-    // 先求 余数，并从个位 push的
-    res.push(cur % 10)
-    // 再求整数这次累加的整数部分，到下次加起来
-    add = cur / 10 | 0
-    i--
-    j--
+  let len = Math.max(num1.length, num2.length);
+  num1 = num1.padStart(len, '0')
+  num2 = num2.padStart(len, '0');
+  let acc = 0;
+  let sum = '';
+
+  for (let i = len - 1; i >= 0; i--) {
+      let a = Number(num1[i]);
+      let b = Number(num2[i]);
+      let t = a + b + acc;
+      acc = Math.floor(t / 10)
+      sum =  t % 10 + sum
   }
-  return res.reverse().join('')
+  if (acc === 1) sum = '1' + sum
+  return sum
 }
 ```
