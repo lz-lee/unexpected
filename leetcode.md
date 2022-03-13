@@ -526,8 +526,8 @@ const combine = (n, k) => {
 |[二叉树遍历合集](#二叉树遍历合集)|
 |[是否有效二叉搜索树](#是否有效二叉搜索树)|
 |[二叉树右视图](#二叉树右视图)|
-|[]()|
-|[]()|
+|[二叉树的最近公共祖先](#二叉树的最近公共祖先)|
+|[对称二叉树](#对称二叉树)|
 ```js
 function TreeNode(val) {
   this.val = val
@@ -764,8 +764,8 @@ var rightSideView = function(root) {
   }
   return res;
 };
-// DFS
 
+// DFS
 var rightSideView = function(root) {
   const res = [];
   const dfs = (root, depth) => {
@@ -782,6 +782,57 @@ var rightSideView = function(root) {
 };
 ```
 
+#### [二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var lowestCommonAncestor = function(root, p, q) {
+    if (root === null || p === root || q === root) return root;
+    let left = lowestCommonAncestor(root.left, p, q);
+    let right = lowestCommonAncestor(root.right, p, q);
+    if (left !== null && right !== null) {
+        return root;
+    }
+    return left !== null ? left : right;
+};
+```
+
+#### [对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/)
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isSymmetric = function(root) {
+  if (root === null) return root;
+  return check(root.left, root.right)
+};
+
+var check = (p, q) => {
+  if (!p && !q) return true;
+  if (!p || !q) return false;
+  return p.val === q.val && check(p.left, q.right) && check(p.right, q.left);
+}
+```
 
 ---
 
