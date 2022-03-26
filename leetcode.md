@@ -146,7 +146,7 @@ const lengthOfLongestSubstring = str => {
 |[双指针-删除链表的倒数第N个结点](#双指针-删除链表的倒数第N个结点)|
 |[滑动窗口最大值](#滑动窗口最大值)|
 |[长度最小的子数组](#长度最小的子数组)|
-
+| [接雨水](#接雨水)|
 #### [删除有序数组中的重复项](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 ```js
 /**
@@ -325,6 +325,35 @@ const minSubArrayLen = (target, nums) => {
   }
   return res === Infinity ? 0 : res
 };
+```
+
+#### [接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+```js
+/**
+ * 总体思路是：找当前柱子左右两边最大值中的最小者，减去本身高度，就是当前柱子能接的雨水量
+ * 维护左右两个的最大值指针
+ * 如果 left < right 则必有 leftMax < rightMax 因此 leftMax - i 就是 i 处能接到的雨水数量
+ * 相反 right >= left 则必有 leftMax >= rightMax 因此 rightMax - i 是 i 处能接到的雨水数量
+ */
+const trap = (height) => {
+  let left = 0;
+  let right = height.length - 1;
+  let leftMax = 0, rightMax = 0;
+  let res = 0;
+  while (left < right) {
+    leftMax = Math.max(height[left], leftMax);
+    rightMax = Math.max(height[right], rightMax);
+    if (height[left] < height[right]) {
+      res += leftMax - height[left];
+      left++;
+    } else {
+      res += rightMax - height[right];
+      right--
+    }
+  }
+  return res;
+}
+
 ```
 
 ---
@@ -852,6 +881,7 @@ var check = (p, q) => {
 | [最小路径和](#最小路径和) |
 | [卖股票最佳时机-i](#卖股票最佳时机-i) |
 | [卖股票最佳时机-ii](#卖股票最佳时机-ii) |
+| [接雨水](#接雨水) |
 
 
 #### [最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
@@ -871,7 +901,7 @@ const maxSubArray = nums => {
 }
 ```
 
-#### [最长递增子序列的长度](https://leetcode-cn.com/problems/longest-increasing-subsequence/) |
+#### [最长递增子序列的长度](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 ```js
 /**
  *  dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度。
@@ -1057,6 +1087,33 @@ var maxProfit = function(prices) {
   }
   return max
 };
+```
+
+#### [接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+```js
+/**
+ * 总体思路：i 处能到的雨水是 i 左右两个最大值中的最小 - i
+ * 维护两个数组分别存最大值，从左到右的 leftMax； 从右到左的 rightMax;
+ *
+*/
+const trap = (height) => {
+  let n = height.length;
+  let leftMax = new Array(n).fill(0);
+  leftMax[0] = height[0];
+  for (let i = 1; i < n; i++) {
+    leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+  }
+  let rightMax = new Array(n).fill(0);
+  rightMax[n - 1] = height[n - 1];
+  for (let i = n - 2; i > 0; i--) {
+    rightMax[i] = Math.max(rightMax[i + 1], height[i])
+  }
+  let res = 0;
+  for (let i = 0; i < n; i++) {
+    res += Math.min(leftMax[i], rightMax[i]) - height[i];
+  }
+  return res;
+}
 ```
 
 ---

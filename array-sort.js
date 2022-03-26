@@ -22,18 +22,18 @@ function bubbleSort1(arr) {
 
 // 优化的冒泡排序
 function betterBubbleSort(arr) {
-    const len = arr.length
+    const len = arr.length;
     for (let i = 0; i < len; i++) {
-        let flag = false
+        let flag = false;
         for (let j = 0; j < len - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
                 swap(arr, j, j + 1);
                 // 只要发生了一次交换，就修改标志位
-                flag = true
+                flag = true;
             }
         }
-         // 若一次交换也没发生，则说明数组有序，直接放过
-        if (!flag) return arr
+        // 若一次交换也没发生，则说明数组有序，直接放过
+        if (!flag) return arr;
     }
 }
 
@@ -57,7 +57,6 @@ function bubbleSort1(arr, fn) {
 bubbleSort1(arr, (a, b) => a - b);
 bubbleSort1(arr, (a, b) => b - a);
 
-
 /**
  * 冒泡排序 双向遍历
  */
@@ -67,7 +66,7 @@ function bubbleSort2(arr) {
     let start = 0;
     let end = len - 1;
 
-    while(start < end) {
+    while (start < end) {
         for (let i = start; i < end; i++) {
             if (arr[i] > arr[i + 1]) {
                 swap(arr, i, i + 1);
@@ -79,11 +78,10 @@ function bubbleSort2(arr) {
                 swap(arr, i - 1, i);
             }
         }
-        start++
+        start++;
     }
     return arr;
- }
-
+}
 
 // 插入排序
 /**
@@ -96,7 +94,7 @@ function bubbleSort2(arr) {
 function insertSort(arr) {
     for (let i = 1; i < arr.length; i++) {
         for (let j = i; j > 0 && arr[j - 1] > arr[j]; j--) {
-            swap(arr, j, j - 1)
+            swap(arr, j, j - 1);
         }
     }
     return arr;
@@ -111,11 +109,11 @@ function insertSort(arr) {
   4、 i + 1 继续循环
 */
 function selectSort(arr) {
-    const len = arr.length
+    const len = arr.length;
     // 定义 minIndex，缓存当前区间最小值的索引，注意是索引
-    let minIndex
+    let minIndex;
     for (let i = 0; i < len - 1; i++) {
-         // 初始化 minIndex 为当前区间第一个元素
+        // 初始化 minIndex 为当前区间第一个元素
         minIndex = i;
         // i、j分别定义当前区间的上下界，i是左边界，j是右边界
         for (let j = i; j < len; j++) {
@@ -128,7 +126,6 @@ function selectSort(arr) {
     }
     return arr;
 }
-
 
 // 快速排序
 /**
@@ -161,7 +158,7 @@ function quickSort(arr) {
 
 function merge(left, right) {
     const result = [];
-    while(left.length > 0 && right.length > 0) {
+    while (left.length > 0 && right.length > 0) {
         result.push(left[0] <= right[0] ? left.shift() : right.shift());
     }
     return result.concat(left, right);
@@ -175,5 +172,5 @@ function mergeSort(arr) {
     // const left = arr.splice(0, mid);
     const left = arr.slice(0, mid);
     const right = arr.slice(mid);
-    return merge(mergeSort(left), mergeSort(right))
+    return merge(mergeSort(left), mergeSort(right));
 }
