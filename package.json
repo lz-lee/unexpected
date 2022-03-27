@@ -22,6 +22,15 @@
     "eslint": "^5.12.0",
     "jest": "^24.7.1"
   },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "tabWidth": 2,
+    "proseWrap": "preserve",
+    "endOfLine": "lf",
+    "printWidth": 100,
+    "jsxBracketSameLine": false
+  },
   "dependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
