@@ -1540,3 +1540,44 @@ const addString = (a, b) => {
   return sum;
 };
 ```
+
+### [LRU-CACHE](https://leetcode-cn.com/problems/lru-cache/)
+
+```js
+/**
+ * @param {number} capacity
+ */
+var LRUCache = function (capacity) {
+  this.cache = new Map();
+  this.capacity = capacity;
+};
+
+/**
+ * @param {number} key
+ * @return {number}
+ */
+LRUCache.prototype.get = function (key) {
+  if (this.cache.has(key)) {
+    const t = this.cache.get(key);
+    this.cache.delete(key);
+    this.cache.set(key, t);
+    return t;
+  }
+  return -1;
+};
+
+/**
+ * @param {number} key
+ * @param {number} value
+ * @return {void}
+ */
+LRUCache.prototype.put = function (key, value) {
+  if (this.cache.has(key)) {
+    this.cache.delete(key);
+  }
+  this.cache.set(key, value);
+  if (this.cache.size > this.capacity) {
+    this.cache.delete(this.cache.keys().next().value);
+  }
+};
+```
