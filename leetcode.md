@@ -1004,7 +1004,8 @@ var check = (p, q) => {
 | [最小路径和](#最小路径和)                     |
 | [卖股票最佳时机-i](#卖股票最佳时机-i)         |
 | [卖股票最佳时机-ii](#卖股票最佳时机-ii)       |
-| [接雨水](#接雨水)                             |
+| [接雨水-动态规划](#接雨水-动态规划)           |
+| [杨辉三角](#杨辉三角)                         |
 
 #### [最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 
@@ -1216,7 +1217,7 @@ var maxProfit = function (prices) {
 };
 ```
 
-#### [接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+#### [接雨水-动态规划](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```js
 /**
@@ -1239,6 +1240,27 @@ const trap = (height) => {
   let res = 0;
   for (let i = 0; i < n; i++) {
     res += Math.min(leftMax[i], rightMax[i]) - height[i];
+  }
+  return res;
+};
+```
+
+#### [杨辉三角](https://leetcode-cn.com/problems/pascals-triangle/)
+
+```js
+/**
+ * @param {number} numRows
+ * @return {number[][]}
+ */
+var generate = function (numRows) {
+  const res = new Array(numRows).fill(0).map((k, i) => {
+    return new Array(i + 1).fill(1);
+  });
+  console.log(res);
+  for (let i = 2; i < res.length; i++) {
+    for (let j = 1; j < i; j++) {
+      res[i][j] = res[i - 1][j - 1] + res[i - 1][j];
+    }
   }
   return res;
 };
@@ -1579,5 +1601,28 @@ LRUCache.prototype.put = function (key, value) {
   if (this.cache.size > this.capacity) {
     this.cache.delete(this.cache.keys().next().value);
   }
+};
+```
+
+### [多数元素](https://leetcode-cn.com/problems/majority-element/)
+
+```js
+/**
+ * 摩尔投票法： 从第一个数开始count=1，遇到相同的就加1，遇到不同的就减1，减到0就重新换个数开始计数，总能找到最多的那个
+ */
+var majorityElement = (nums) => {
+  let res;
+  let count = 0;
+  for (let i of nums) {
+    if (count === 0) {
+      res = i;
+    }
+    if (res === i) {
+      count++;
+    } else {
+      count--;
+    }
+  }
+  return res;
 };
 ```
