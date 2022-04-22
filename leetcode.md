@@ -127,7 +127,7 @@ const lengthOfLongestSubstring = (str) => {
   const stack = [];
   let max = 0;
   for (let i of str) {
-    let index = stack.index(i);
+    let index = stack.indexOf(i);
     if (index !== -1) {
       // 出现过，那么需要删除 i 及 i 之前的元素，也就是从第 1 个元素到 i 这个元素 (splice 删除的是 个数 )
       stack.splice(0, index + 1);
