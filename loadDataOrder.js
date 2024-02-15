@@ -9,18 +9,18 @@
  */
 
 function fetchAPI(url, time, err) {
-    return new Promise((resolve, reject) => {
-        console.log(`fetch url ${url} start`)
-        setTimeout(() => {
-            err ? reject(`fetchAPI-fail-${url}-${time}`) : resolve(`fetchAPI-success-${url}-${time}`);
-        }, time);
-    });
+  return new Promise((resolve, reject) => {
+    console.log(`fetch url ${url} start`);
+    setTimeout(() => {
+      err ? reject(`fetchAPI-fail-${url}-${time}`) : resolve(`fetchAPI-success-${url}-${time}`);
+    }, time);
+  });
 }
 const arr = ['url1', 'url2', 'url3', 'url4'];
 const promises = arr.map(async (item, index) => {
-    const time = (index + 1) % 2 * 1000;
-    const p = await fetchAPI(item, time);
-    return p;
+  const time = ((index + 1) % 2) * 1000;
+  const p = await fetchAPI(item, time);
+  return p;
 });
 
 /**
@@ -28,17 +28,17 @@ const promises = arr.map(async (item, index) => {
  * @param {[url1, url2, url3]} arr
  */
 async function loadDataOrder1(promises) {
-    // Promise.all(promises).then((res) => {
-    //     console.log('res is >>>>>>>>>>>', res)
-    // })
-    for (const item of promises) {
-        try {
-            const data = await item;
-            console.log(data);
-        } catch (err) {
-            console.log(err);
-        }
+  // Promise.all(promises).then((res) => {
+  //     console.log('res is >>>>>>>>>>>', res)
+  // })
+  for (const item of promises) {
+    try {
+      const data = await item;
+      console.log(data);
+    } catch (err) {
+      console.log(err);
     }
+  }
 }
 
 /**
@@ -46,12 +46,12 @@ async function loadDataOrder1(promises) {
  * @param {[url1, url2, url3]} arr
  */
 function loadDataOrder2(promises) {
-    promises.reduce((chain, p, index) => {
-        return chain
-            .then(() => p)
-            .then(data => console.log(data))
-            .catch(err => console.log(err));
-    }, Promise.resolve());
+  promises.reduce((chain, p, index) => {
+    return chain
+      .then(() => p)
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }, Promise.resolve());
 }
 
 // 方法一 二 都没有单独处理错误的和数据
@@ -61,51 +61,53 @@ function loadDataOrder2(promises) {
  * @param {*} arr
  */
 async function loadDataOrder3(arr) {
-    const gens = arr.map((item, index) => {
-        const time = (index + 1) % 2 * 1000;
-        const gen = loadOne(item, time)
-        return {
-            gen, // it 方法
-            p: gen.next().value // 启动请求
-        };
-    });
-    for (const { gen, p } of gens) {
-        try {
-            const d = await p;
-            console.log('ddd>>>', d)
-        } catch(err) {
-            console.log(err);
-        } finally {
-            console.log('resolve 了 Promise >>>', p);
-            // next 传入的 p 是 resolve 过后的 p，那么在 loadOne 里，yield 暂停后再执行 gen.next(p),即将这个 resolve 的 promise 传递给上一次 yield 的返回值 pData
-            gen.next(p);
-        }
+  const gens = arr.map((item, index) => {
+    const time = ((index + 1) % 2) * 1000;
+    const gen = loadOne(item, time);
+    return {
+      gen, // it 方法
+      p: gen.next().value, // 启动请求
+    };
+  });
+  for (const { gen, p } of gens) {
+    try {
+      const d = await p;
+      console.log('ddd>>>', d);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('resolve 了 Promise >>>', p);
+      // next 传入的 p 是 resolve 过后的 p，那么在 loadOne 里，yield 暂停后再执行 gen.next(p),即将这个 resolve 的 promise 传递给上一次 yield 的返回值 pData
+      gen.next(p);
     }
+  }
 }
 
 function* loadOne(url, time) {
-    const pData = yield fetchAPI(url, time);
-    pData.then(data => {
-        console.log('load one ===> ', data)
-    }).catch(err => console.log(err));
+  const pData = yield fetchAPI(url, time);
+  pData
+    .then((data) => {
+      console.log('load one ===> ', data);
+    })
+    .catch((err) => console.log(err));
 }
 
 // loadDataOrder3(arr);
 
 function createQueue(promises) {
-    const t = promises
-    const next = () => {
-        const cur = t.shift();
-        if (cur) {
-            return Promise.resolve(cur).then((val) => {
-                console.log(val)
-                return next()
-            })
-        } else {
-            return Promise.resolve('done')
-        }
+  const t = promises;
+  const next = () => {
+    const cur = t.shift();
+    if (cur) {
+      return Promise.resolve(cur).then((val) => {
+        console.log(val);
+        return next();
+      });
+    } else {
+      return Promise.resolve('done');
     }
-    return next()
+  };
+  return next();
 }
 
-createQueue(promises)
+loadDataOrder2(promises);

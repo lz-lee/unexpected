@@ -404,8 +404,10 @@ const maxArea = (height) => {
 | [电话号码的字母组合](#电话号码的字母组合) |
 | [递增子序列](#递增子序列)                 |
 | [子集](#子集)                             |
+| [子集-ii](#子集-ii)                       |
 | [岛屿数量](#岛屿数量)                     |
 | [数组全排列](#数组全排列)                 |
+| [数组全排列-ii](#数组全排列-ii)           |
 | [限定组合](#限定组合)                     |
 
 #### [括号生成](https://leetcode-cn.com/problems/generate-parentheses/)
@@ -467,7 +469,7 @@ const letterCombine = (digits) => {
 };
 ```
 
-#### [递增子序列](https://leetcode-cn.com/problems/increasing-subsequences/)
+#### [递增子序列](https://leetcode.cn/problems/non-decreasing-subsequences/)
 
 ```js
 /**
@@ -528,6 +530,32 @@ const subsets = (nums) => {
   }
   dfs(0);
   return res;
+};
+```
+
+#### [子集-ii](https://leetcode.cn/problems/subsets-ii/description/)
+
+```js
+const subsetsWithDup = function(nums) {
+    let res = [], sub = [];
+    nums.sort((a,b) => a - b);
+    let dfs = (n) => {
+        res.push(sub.slice());
+        if (n > nums.length - 1) {
+            return;
+        }
+        for (let i = n; i < nums.length; i++) {
+            if (i > n && nums[i] === nums[i-1]) { // 去重
+                continue;
+            }
+            sub.push(nums[i]);
+            dfs(i+1)
+            sub.pop()
+        }
+    }
+    dfs(0);
+    return res;
+};
 };
 ```
 
@@ -595,6 +623,38 @@ const permute = (nums) => {
   }
   // 从索引为 0 的坑位（也就是第一个坑位）开始 dfs
   dfs(0);
+  return res;
+};
+```
+
+#### [数组全排列-ii](https://leetcode.cn/problems/permutations-ii/)
+
+```js
+const permute = (nums) => {
+  const len = nums.length;
+  const cur = [];
+  const res = [];
+  function dfs(visit) {
+    if (cur.length === len) {
+      res.push(cur.slice());
+      return;
+    }
+    for (let i = 0; i < nums.length; i++) {
+      if (i > 0 && nums[i] === nums[i - 1] && visit[i - 1]) {
+        // 去重复
+        continue;
+      }
+      if (!visit[i]) {
+        visit[i] = true;
+        cur.push(i);
+        dfs(visit);
+        visit[i] = false;
+        cur.pop();
+      }
+    }
+  }
+  // 从索引为 0 的坑位（也就是第一个坑位）开始 dfs
+  dfs([]);
   return res;
 };
 ```
@@ -682,7 +742,7 @@ const maxDepth = (root) => {
 };
 ```
 
-#### [二叉树最小深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+#### [二叉树最小深度](https://leetcode.cn/problems/minimum-depth-of-binary-tree)
 
 ```js
 /**
@@ -719,7 +779,7 @@ const levelOrder = (root) => {
       let level = [];
       // 缓存当前层级的长度，这一步很关键，因为队列长度后面会发生改变
       let len = queue.length;
-      for (let i = 0; i < len; i++) {
+      while (len--) {
         let top = queue.shift();
         level.push(top.val);
         if (top.left) {
@@ -1281,6 +1341,7 @@ var generate = function (numRows) {
 | [删除链表的倒数第 N 个结点](#删除链表的倒数第N个结点)      |
 | [环形链表 i](#环形链表i)                                   |
 | [环形链表 ii](#环形链表ii)                                 |
+| [两两交换](#两两交换)                                 |
 
 ```js
 class ListNode {
@@ -1528,6 +1589,29 @@ const detectCycle = function (head) {
     head = head.next;
   }
   return null;
+};
+```
+
+#### [两两交换](https://leetcode.cn/problems/swap-nodes-in-pairs)
+
+```js
+/**
+ * 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+ */
+
+const swapPairs = function(head) {
+   let dum = new ListNode();
+   dum.next = head;
+   let cur = dum;
+   while (cur.next && cur.next.next) {
+    let n1 = cur.next;
+    let n2 = cur.next.next;
+    cur.next = n2;
+    n1.next = n2.next;
+    n2.next = n1;
+    cur = n1;
+   }
+  return dum.next;
 };
 ```
 

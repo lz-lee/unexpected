@@ -175,7 +175,6 @@ const generateMatrix = n => {
         top++
         for (let i = top; i <= bottom; i++) res[i][right] = num++
         right--
-        if (num === size) break
         for (let i = right; i >= left; i--) res[bottom][i] = num++
         bottom--
         for (let i = bottom; i >= top; i--) res[i][left] = num++
