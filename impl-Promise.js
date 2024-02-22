@@ -34,7 +34,7 @@ function Promise(executor) {
                 self.status = 'rejected';
                 self.reason = reason;
                 for (var i = 0; i < self.onRejectedCallback.length; i++) {
-                    self.onRejectedCallback[i](value);
+                    self.onRejectedCallback[i](reason);
                 }
             }
         });
@@ -82,7 +82,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
 
             self.onRejectedCallback.push(function () {
                 try {
-                    var x = onRejected(self.value);
+                    var x = onRejected(self.reason);
                     // if (x instanceof Promise) {
                     //   x.then(resolve, reject)
                     // }
@@ -119,7 +119,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
         return (promise2 = new Promise(function (resolve, reject) {
             setTimeout(function () {
                 try {
-                    var x = onRejected(self.value);
+                    var x = onRejected(self.reason);
                     // if (x instanceof Promise) {
                     //   x.then(resolve, reject)
                     // }
