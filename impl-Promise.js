@@ -7,7 +7,8 @@ function Promise(executor) {
     }
     var self = this;
     self.status = 'pending'; // Promise 的状态
-    self.data = undefined; // Promise 的值
+    self.value = undefined; // Promise 的值
+    self.reason = undefined;
     self.onResolvedCallback = []; // resolve 的回调函数集
     self.onRejectedCallback = []; // reject 的回调函数集
 
@@ -19,7 +20,7 @@ function Promise(executor) {
             // 异步调用
             if (self.status === 'pending') {
                 self.status = 'resovled';
-                self.data = value;
+                self.value = value;
                 for (var i = 0; i < self.onResolvedCallback.length; i++) {
                     self.onResolvedCallback[i](value);
                 }
@@ -27,11 +28,11 @@ function Promise(executor) {
         });
     }
 
-    function reject(value) {
+    function reject(reason) {
         setTimeout(function () {
             if (self.status === 'pending') {
                 self.status = 'rejected';
-                self.data = value;
+                self.reason = reason;
                 for (var i = 0; i < self.onRejectedCallback.length; i++) {
                     self.onRejectedCallback[i](value);
                 }
@@ -68,7 +69,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
         return (promise2 = new Promise(function (resolve, reject) {
             self.onResolvedCallback.push(function () {
                 try {
-                    var x = onResolved(self.data);
+                    var x = onResolved(self.value);
                     // if (x instanceof Promise) {
                     //   x.then(resolve, reject)
                     // }
@@ -81,7 +82,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
 
             self.onRejectedCallback.push(function () {
                 try {
-                    var x = onRejected(self.data);
+                    var x = onRejected(self.value);
                     // if (x instanceof Promise) {
                     //   x.then(resolve, reject)
                     // }
@@ -98,7 +99,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
         return (promise2 = new Promise(function (resolve, reject) {
             setTimeout(function () {
                 try {
-                    var x = onResolved(self.data);
+                    var x = onResolved(self.value);
                     // 如果返回一个Promise对象，则取它的结果作为promose2的结果
                     // if (x instanceof Promise) {
                     //   x.then(resolve, reject)
@@ -118,7 +119,7 @@ Promise.prototype.then = function (onResolved, onRejected) {
         return (promise2 = new Promise(function (resolve, reject) {
             setTimeout(function () {
                 try {
-                    var x = onRejected(self.data);
+                    var x = onRejected(self.value);
                     // if (x instanceof Promise) {
                     //   x.then(resolve, reject)
                     // }
