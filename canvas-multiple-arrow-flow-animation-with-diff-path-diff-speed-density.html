@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas 多路径箭头动画</title>
+  </head>
+  <body>
+    <!-- Canvas 区域 -->
+    <canvas id="canvas" width="800" height="600" style="border: 1px solid #ddd"></canvas>
+    <div id="controls"></div>
+    <!-- 控制开关区域 -->
+
+    <script>
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // 定义多个路径和配置
+      const svgPaths = [
+        {
+          path: 'M100,100 C200,50 400,150 500,100 S700,150 800,100',
+          speed: 100,
+          density: 10,
+          name: '路径 1',
+        },
+        {
+          path: 'M50,500 L300,300 L550,500',
+          speed: 100,
+          density: 10,
+          name: '路径 2',
+        },
+        {
+          path: 'M100,200 Q300,50 500,200 T700,200',
+          speed: 100,
+          density: 5,
+          name: '路径 3',
+        },
+      ];
+
+      const obstacles = [
+        {
+          type: 'polygon',
+          points: [
+            { x: -50, y: -50 },
+            { x: 50, y: -50 },
+            { x: 50, y: 50 },
+            { x: -50, y: 50 },
+          ],
+          x: 200,
+          y: 200,
+          rotation: Math.random() * Math.PI * 2, // 随机旋转角度
+        },
+        {
+          type: 'rect',
+          x: 500,
+          y: 300,
+          width: 100,
+          height: 150,
+          rotation: Math.random() * Math.PI * 2, // 随机旋转角度
+        },
+      ];
+      let angle = 0;
+      let dynamicObstacles = new Path2D();
+      function createRotateRectPath(x, y, width, height, angle) {
+        let centerX = x + width / 2;
+        let centerY = y + height / 2;
+        let cos = Math.cos(angle);
+        let sin = Math.sin(angle);
+
+        let vertices = [
+          { x: x, y: y }, // Top-left
+          { x: x + width, y: y }, // top-right
+          { x: x + width, y: y + height }, // bottom-right
+          { x: x, y: y + height }, // bottom-left
+        ].map(({ x, y }) => ({
+          x: centerX + (x - centerX) * cos - (y - centerY) * sin,
+          y: centerY + (x - centerX) * sin - (y - centerY) * cos,
+        }));
+        let rectPath = new Path2D();
+        rectPath.moveTo(vertices[0].x, vertices[0].y);
+        vertices.slice(1).forEach(({ x, y }) => rectPath.lineTo(x, y));
+        rectPath.closePath();
+        return rectPath;
+      }
+
+      function updateDynamicObstacles() {
+        dynamicObstacles = new Path2D();
+        let x = 300;
+        let y = 200;
+        let width = 200;
+        let height = 150;
+        dynamicObstacles.addPath(createRotateRectPath(x, y, width, height, angle));
+        let polygon = new Path2D(`M600,300 L650,250L750,350L650,400Z`);
+        dynamicObstacles.addPath(polygon);
+        angle += 0.02;
+      }
+
+      // 工具函数：解析 SVG 路径为点数组
+      function parsePathToPoints(path, resolution = 1000) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        svg.setAttribute('d', path);
+        const length = svg.getTotalLength();
+        const points = [];
+        for (let i = 0; i <= resolution; i++) {
+          const point = svg.getPointAtLength((length * i) / resolution);
+          points.push({ x: point.x, y: point.y });
+        }
+        return { points, length };
+      }
+
+      // 箭头类
+      class Arrow {
+        constructor(position, speed, points) {
+          this.position = position;
+          this.speed = speed;
+          this.offset = position;
+          this.points = points;
+        }
+
+        update(deltaTime) {
+          // deltaTime = Math.min(1, deltaTime);
+          // console.log(deltaTime, ">>>>>>>>>>>>12132");
+          if (deltaTime > 1) deltaTime = 0;
+          this.offset += this.speed * deltaTime;
+          if (this.offset >= this.points.length) {
+            this.offset -= this.points.length; // 回到路径起点
+          }
+        }
+
+        draw() {
+          const point = this.points[Math.floor(this.offset)];
+
+          const nextPoint =
+            this.points[Math.min(Math.floor(this.offset) + 1, this.points.length - 1)];
+
+          const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x);
+
+          ctx.save();
+          ctx.translate(point.x, point.y);
+          ctx.rotate(angle);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(-10, -5);
+          ctx.lineTo(-10, 5);
+          ctx.closePath();
+          ctx.fillStyle = 'red';
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // 路径类
+      class Path {
+        constructor(pathData, speed, density, name) {
+          const { points, length } = parsePathToPoints(pathData);
+          this.points = points;
+          this.length = length;
+          this.speed = speed;
+          this.density = density;
+          this.name = name;
+          this.isAnimating = true; // 默认开启动画
+          this.arrows = this.createArrows();
+        }
+
+        createArrows() {
+          const arrows = [];
+          const spacing = this.length / this.density;
+          for (let i = 0; i < this.density; i++) {
+            arrows.push(
+              new Arrow((spacing * i) / (this.length / this.points.length), this.speed, this.points)
+            );
+          }
+          return arrows;
+        }
+
+        updateAndDraw(deltaTime) {
+          if (!this.isAnimating) return; // 如果动画关闭，直接跳过
+          ctx.beginPath();
+          this.points.forEach((point, index) => {
+            if (index === 0) ctx.moveTo(point.x, point.y);
+            else ctx.lineTo(point.x, point.y);
+          });
+          ctx.strokeStyle = 'blue';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          this.arrows.forEach((arrow) => {
+            arrow.update(deltaTime);
+            arrow.draw();
+          });
+        }
+
+        toggleAnimation() {
+          this.isAnimating = !this.isAnimating; // 开关动画状态
+        }
+      }
+
+      // 初始化所有路径
+      const paths = svgPaths.map((p) => new Path(p.path, p.speed, p.density, p.name));
+
+      // 动态生成开关按钮
+      const controls = document.getElementById('controls');
+      paths.forEach((path, index) => {
+        const button = document.createElement('button');
+        button.textContent = `关闭 ${path.name}`;
+        button.style.margin = '5px';
+        button.onclick = () => {
+          path.toggleAnimation();
+          button.textContent = path.isAnimating ? `关闭 ${path.name}` : `开启 ${path.name}`;
+        };
+        controls.appendChild(button);
+      });
+
+      // 动画主循环
+      let lastTime = 0;
+      function animate(time) {
+        const deltaTime = (time - lastTime) / 1000;
+        lastTime = time;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // 更新动态遮挡区
+        updateDynamicObstacles();
+        // 创建挖空的裁剪区域
+        let clipPath = new Path2D();
+        clipPath.rect(0, 0, ctx.canvas.width, ctx.canvas.height); // 全画布区域
+        clipPath.addPath(dynamicObstacles); // 添加遮挡区域
+        ctx.save();
+        ctx.clip(clipPath, 'evenodd'); // 挖空模式
+
+        paths.forEach((path) => path.updateAndDraw(deltaTime));
+
+        ctx.restore();
+        // 绘制遮挡区以观察
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fill(dynamicObstacles);
+        ctx.restore();
+        requestAnimationFrame(animate);
+      }
+
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>
